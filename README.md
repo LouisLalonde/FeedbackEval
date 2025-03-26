@@ -5,8 +5,7 @@ Repair".
 
 ## Benchmark Dataset
 
-We construct a new benchmark, Feed-
-backEval, to systematically evaluate LLMs’ ability to interpret and
+We construct a new benchmark, FeedbackEval, to systematically evaluate LLMs’ ability to interpret and
 utilize various feedback types in code repair.
 
 FeedbackEval consists of 394 coding tasks covering a diverse range of programming scenarios. In total, it includes 3,736
@@ -17,20 +16,20 @@ feedback.
 
 The key components of the benchmark are defined as follows:
 
-* Erroneous Code: A faulty function or code snippet requiring
+* **Erroneous Code**: A faulty function or code snippet requiring
   correction serves as the initial state for the repair task.
-* Docstring: A high-level description of the code’s intended functionality.
-* Context: Supplementary information about the project or surrounding code environment, such as related APIs, class
+* **Docstring**: A high-level description of the code’s intended functionality.
+* **Context**: Supplementary information about the project or surrounding code environment, such as related APIs, class
   definitions, or global variables.
-* Test Feedback: This feedback explicitly identifies failing tests and expected outcomes,
+* **Test Feedback**: This feedback explicitly identifies failing tests and expected outcomes,
   providing clear, actionable guidance for code correction.
-* Compiler Feedback: This feedback highlights syntax errors, code style violations,
+* **Compiler Feedback**: This feedback highlights syntax errors, code style violations,
   and potential bugs, offering technical insights into structural
   flaws in the code.
-* Human Feedback: This feedback mimics developer-generated suggestions in natural language, pointing out potential logic
+* **Human Feedback**: This feedback mimics developer-generated suggestions in natural language, pointing out potential logic
   flaws and recommending
   best practices to improve code reliability and robustness.
-* Simple Feedback: A minimalistic, generic form of feedback
+* **Simple Feedback**: A minimalistic, generic form of feedback
   (e.g., “The code is wrong. Please fix it.”).
 
 ## Usage
