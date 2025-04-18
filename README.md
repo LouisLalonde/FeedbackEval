@@ -41,12 +41,14 @@ with our tool.
 
 1. Environment Setup
 
-Ensure you're running Python 3.8 or newer. We recommend setting up a virtual environment:
+Before running our benchmark, you should first obtain the `CoderEval` Docker environment from [here](https://github.com/CoderEval/CoderEval).
 
+Then copy our files to the `/home/travis/builds` directory:
 ```
-conda create -n FeedbackEval python=3.8
-conda activate FeedbackEval
+docker cp <path_to_FeedbackEval> <container_id>:/home/travis/builds
 ```
+
+
 
 2. Repository Setup
 
