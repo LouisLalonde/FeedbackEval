@@ -26,7 +26,7 @@ The key components of the benchmark are defined as follows:
 * **Compiler Feedback**: This feedback highlights syntax errors, code style violations,
   and potential bugs, offering technical insights into structural
   flaws in the code.
-* **Human Feedback**: This feedback mimics developer-generated suggestions in natural language, pointing out potential logic
+* **LLM Feedback**: This feedback mimics developer-generated suggestions in natural language, pointing out potential logic
   flaws and recommending
   best practices to improve code reliability and robustness.
 * **Simple Feedback**: A minimalistic, generic form of feedback
