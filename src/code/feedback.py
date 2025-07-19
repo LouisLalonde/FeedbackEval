@@ -251,7 +251,7 @@ def eval_feedback(dataset, file_path):
                     prompt = build_gpt_prompt(dataset, result['generate_code'], data.get('docstring', None),
                                               data.get('oracle_context', None))
                     llm = GPT(api_key, "gpt-4o-mini", prompt)
-                    result['human_feedback'] = llm.generation()
+                    result['llm_feedback'] = llm.generation()
                     result['simple_feedback'] = "The code is wrong. Please fix it."
                     filtered_results.append(result)
             except Exception as e:

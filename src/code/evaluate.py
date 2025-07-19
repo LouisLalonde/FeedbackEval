@@ -1,5 +1,6 @@
 from src.model.GPT import GPT
-import random
+import logging
+from datetime import datetime
 import argparse
 from tqdm import tqdm
 from feedback import run_test, run_pylint
@@ -8,7 +9,16 @@ from collections import defaultdict
 from utils import FEEDBACK_TYPES, api_key, read_jsonl, write_jsonl, gen_solution
 from template import build_gpt_prompt, build_repair_prompt
 
+# 生成带时间戳的日志文件名
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # 格式化时间为字符串，例如：20231001_120000
+log_filename = f'deepseek_multi_output_{timestamp}.log'     # 构建最终的日志文件名
 
+logging.basicConfig(
+    filename=log_filename,           # 使用带时间戳的日志文件名
+    level=logging.INFO,              # 记录级别
+    format='%(asctime)s - %(message)s',  # 日志格式
+    encoding='utf-8'
+)
 def single_round_fix_code(file_path, model_name, model_version, feedback, dataset, use_docstring, use_context,
                           use_persona, use_cot, use_few_shot, use_instructions):
     print(f"Evaluating file: {file_path}")
@@ -29,7 +39,9 @@ def single_round_fix_code(file_path, model_name, model_version, feedback, datase
                 is_few_shot=use_few_shot,
                 is_instructions=use_instructions
             )
+            logging.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n")
             fixed_code = gen_solution(model_name, model_version, prompt)
+            logging.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，fixed_code: \n{fixed_code}\n")
             fixed_results.append({
                 "source": result["source"],
                 "false_code": result["generate_code"],
@@ -104,7 +116,7 @@ def multi_round_fix_code(file_path, model_name, model_version, feedback, dataset
                         "test_feedback": run_test(dataset, current_code, ques.get('_id', None),
                                                   ques.get('test', None))[1],
                         "compiler_feedback": run_pylint(current_code),
-                        "human_feedback": GPT(api_key, "gpt-4o-mini",
+                        "llm_feedback": GPT(api_key, "gpt-4o-mini",
                                               build_gpt_prompt(dataset, current_code, ques.get('docstring', None),
                                                                ques.get('oracle_context', None))).generation(),
                         "simple_feedback": "The code is wrong. Please fix it."
@@ -117,7 +129,9 @@ def multi_round_fix_code(file_path, model_name, model_version, feedback, dataset
 
                     prompt = build_repair_prompt(current_code, current_feedback, ques.get('docstring', None),
                                                  ques.get('oracle_context', None))
+                    logging.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n")
                     fixed_code = gen_solution(model_name, model_version, prompt)
+                    logging.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，fixed_code: \n{fixed_code}\n")
 
                     if not fixed_code:
                         new_solution = {
@@ -245,7 +259,7 @@ def main():
     parser.add_argument('--no_instructions', action='store_false', help="Whether to use instructions")
     args = parser.parse_args()
     if args.function == 'single_fix':
-        input_path = os.path.join("dataset", args.dataset, f"{args.dataset}_feedback.jsonl")
+        input_path = os.path.join("dataset", args.dataset, f"{args.dataset}_feedback_test.jsonl")
         single_round_fix_code(input_path, args.model, args.version, args.feedback, args.dataset, args.no_docstring,
                               args.no_context, args.no_persona, args.is_cot, args.is_few_shot, args.no_instructions)
     elif args.function == 'single_score':
