@@ -10,15 +10,19 @@ from utils import FEEDBACK_TYPES, api_key, read_jsonl, write_jsonl, gen_solution
 from template import build_gpt_prompt, build_repair_prompt
 
 # 生成带时间戳的日志文件名
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # 格式化时间为字符串，例如：20231001_120000
-log_filename = f'deepseek_multi_output_{timestamp}.log'     # 构建最终的日志文件名
+def setup_logging():
+    """设置日志配置"""
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler('llm_gt.log', encoding='utf-8'),
+        ]
+    )
+    return logging.getLogger(__name__)
 
-logging.basicConfig(
-    filename=log_filename,           # 使用带时间戳的日志文件名
-    level=logging.INFO,              # 记录级别
-    format='%(asctime)s - %(message)s',  # 日志格式
-    encoding='utf-8'
-)
+logger = setup_logging()
+
 def single_round_fix_code(file_path, model_name, model_version, feedback, dataset, use_docstring, use_context,
                           use_persona, use_cot, use_few_shot, use_instructions):
     print(f"Evaluating file: {file_path}")
@@ -39,9 +43,9 @@ def single_round_fix_code(file_path, model_name, model_version, feedback, datase
                 is_few_shot=use_few_shot,
                 is_instructions=use_instructions
             )
-            logging.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n")
+            logger.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n")
             fixed_code = gen_solution(model_name, model_version, prompt)
-            logging.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，fixed_code: \n{fixed_code}\n")
+            logger.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，fixed_code: \n{fixed_code}\n")
             fixed_results.append({
                 "source": result["source"],
                 "false_code": result["generate_code"],
@@ -61,6 +65,7 @@ def single_round_fix_code(file_path, model_name, model_version, feedback, datase
                 "level": ques["level"],
                 "oracle_context": ques["oracle_context"],
                 "docstring": ques["docstring"],
+                "correct_code": ques["correct_code"]
             })
         else:
             raise ValueError(f"Invalid dataset: {dataset}")

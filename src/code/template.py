@@ -66,6 +66,55 @@ Carefully review the @@Existing Code and understand its structure, logic, and fu
     return prompt
 
 
+def build_gpt_gt_prompt(dataset, code, correct_code, docstring=None, context=None):
+    if dataset == 'CoderEval':
+        prompt = """
+You are a highly skilled and thoughtful programming assistant tasked with guiding a programmer to improve the code. 
+Your primary goal is to analyze the @@Existing Code based on the provided @@Docstring, @@Oracle Context and 
+@@Correct Code to identify potential issues and offer suggestions for improvement.
+Carefully review the @@Existing Code and understand its structure, logic, and functionality.
+Compare the code against the @@Docstring to ensure it adheres to the described purpose, inputs, outputs, and behavior.
+Use the @@Oracle Context to ensure the code correctly interacts with external elements, such as types, APIs, variables, 
+or constants, and adheres to the dependencies and integration requirements within the broader environment. Then, compare 
+the @@Existing Code against the @@Correct Code to highlight deviations, misunderstandings, or missed optimizations.
+#Requirement: 
+1. Offer guidance in a clear and understandable manner, explaining the rationale behind each suggestion.
+2. Refrain from providing actual code solutions, but instead focus on conceptual modifications or strategies.
+3. Please respond in no more than three sentences.
+@@Existing Code
+{}
+
+@@Docstring
+{}
+
+@@Oracle Context
+{}
+
+@@Correct Code
+{}
+    """.strip().format(
+            code, docstring, context, correct_code
+        )
+    elif dataset == 'HumanEval':
+        prompt = """
+You are a highly skilled and thoughtful programming assistant tasked with guiding a programmer to improve the code. 
+Your primary goal is to analyze the @@Existing Code to identify potential issues and offer suggestions for improvement.
+Carefully review the @@Existing Code and understand its structure, logic, and functionality.
+
+#Requirement: 
+1. Offer guidance in a clear and understandable manner, explaining the rationale behind each suggestion.
+2. Refrain from providing actual code solutions, but instead focus on conceptual modifications or strategies.
+3. Please respond in no more than three sentences.
+@@Existing Code
+{}
+""".strip().format(
+            code
+        )
+    else:
+        raise ValueError(f"Invalid dataset: {dataset}")
+    return prompt
+
+
 def build_repair_prompt(
         solution,
         feedback,

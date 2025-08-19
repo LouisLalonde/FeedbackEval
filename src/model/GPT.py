@@ -5,8 +5,8 @@ from tenacity import retry, wait_random_exponential, stop_after_attempt
 class GPT:
     def __init__(self, api_key: str, model_name: str, content: str):
         self.client = OpenAI(
-            api_key="sk-e85e1f9114884bcba216de8b41121719",
-            base_url="https://api.deepseek.com",
+            api_key="sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH",
+            base_url="https://api.agicto.cn/v1",
         )
         self.model_name = model_name
         self.content = content
@@ -26,8 +26,8 @@ class GPT:
 
 if __name__ == "__main__":
     gpt = GPT(
-        api_key="sk-e85e1f9114884bcba216de8b41121719",
-        model_name="deepseek-chat",
+        api_key="sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH",
+        model_name="gpt-4o-mini",
         content="Hello, how are you?",
     )
     response = gpt.generation()

@@ -9,7 +9,10 @@ class Claude:
             model_name: str,
             content: str
     ):
-        self.client = OpenAI(api_key=api_key, base_url="")
+        self.client = OpenAI(
+            api_key="sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH",
+            base_url="https://api.agicto.cn/v1",
+        )
         self.model_name = model_name
         self.content = content
 
@@ -29,3 +32,12 @@ class Claude:
             return response.choices[0].message.content
         else:
             raise ValueError("Empty response from API")
+
+if __name__ == "__main__":
+    gpt = Claude(
+        api_key="sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH",
+        model_name="claude-3-5-sonnet-20241022",
+        content="Hello, how are you?",
+    )
+    response = gpt.generation()
+    print(response)
