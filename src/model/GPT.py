@@ -1,12 +1,13 @@
 from openai import OpenAI
 from tenacity import retry, wait_random_exponential, stop_after_attempt
+from src.code.utils import base_url
 
 
 class GPT:
     def __init__(self, api_key: str, model_name: str, content: str):
         self.client = OpenAI(
             api_key="",
-            base_url="",
+            base_url=base_url,
         )
         self.model_name = model_name
         self.content = content

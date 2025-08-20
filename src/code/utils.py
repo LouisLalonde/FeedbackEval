@@ -4,6 +4,7 @@ import re
 import importlib
 
 api_key = ""
+base_url = ""
 FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_feedback", "llm_gt_feedback", "simple_feedback", "mixed_feedback"]
 MODELS = {
     "GPT": "gpt-4o-2024-11-20",
