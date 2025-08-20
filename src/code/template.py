@@ -163,7 +163,9 @@ def calculate_average(numbers):
     return total / len(numbers)
 
 Feedback:
-Consider adding error handling to manage potential issues, such as division by zero when the input list is empty. Additionally, using built-in functions like `sum()` can simplify the code and improve readability, making it more pythonic. Finally, ensure that the function can handle non-numeric inputs to prevent runtime errors.
+Consider adding error handling to manage potential issues, such as division by zero when the input list is empty. 
+Additionally, using built-in functions like `sum()` can simplify the code and improve readability, making it more pythonic. 
+Finally, ensure that the function can handle non-numeric inputs to prevent runtime errors.
 
 Fixed Code:
 def calculate_average(numbers):

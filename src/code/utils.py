@@ -4,7 +4,7 @@ import re
 import importlib
 
 api_key = ""
-FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_feedback", "llm_gt_feedback", "simple_feedback"]
+FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_feedback", "llm_gt_feedback", "simple_feedback", "mixed_feedback"]
 MODELS = {
     "GPT": "gpt-4o-2024-11-20",
     "Claude": "claude-3-5-sonnet-20241022",

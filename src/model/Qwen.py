@@ -10,8 +10,8 @@ class Qwen:
             content: str
     ):
         self.client = OpenAI(
-            api_key="sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH",
-            base_url="https://api.agicto.cn/v1",
+            api_key="",
+            base_url="",
         )
         self.model_name = model_name
         self.content = content
@@ -35,8 +35,8 @@ class Qwen:
 
 if __name__ == "__main__":
     gpt = Qwen(
-        api_key="sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH",
-        model_name="qwen2.5-72b-instruct",
+        api_key="",
+        model_name="",
         content="Hello, how are you?",
     )
     response = gpt.generation()

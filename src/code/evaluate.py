@@ -16,7 +16,7 @@ def setup_logging():
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler('llm_gt_humaneval.log', encoding='utf-8', delay=False),
+            logging.FileHandler('mixed_feedback_humaneval.log', encoding='utf-8', delay=False),
         ],
         force=True  # 覆盖任何现有的日志配置
     )
@@ -42,9 +42,25 @@ def single_round_fix_code(file_path, model_name, model_version, feedback, datase
         fixed_results = []
         list_results = ques["false_results"]
         for result in list_results:
+            if feedback == "mixed_feedback":
+                # 获取四种反馈并组合
+                test_feedback = result.get("test_feedback", "")
+                compiler_feedback = result.get("compiler_feedback", "")
+                llm_gt_feedback = result.get("llm_gt_feedback", "")
+
+                # 组合所有反馈
+                feedback_parts = ["The code is wrong. Please fix it.",
+                                  f"{llm_gt_feedback}",
+                                  "Here is some additional feedback information from the test cases and "
+                                  "static analysis tools for your reference:",
+                                  f"{test_feedback}\n{compiler_feedback}"]
+                actual_feedback = "\n".join(feedback_parts)
+            else:
+                # 原有逻辑保持不变
+                actual_feedback = result.get(feedback, None)
             prompt = build_repair_prompt(
                 solution=result["generate_code"],
-                feedback=result.get(feedback, None),
+                feedback=actual_feedback,
                 docstring=ques.get('docstring', None) if use_docstring else None,
                 context=ques.get('oracle_context', None) if use_context else None,
                 is_persona=use_persona,

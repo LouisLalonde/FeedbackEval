@@ -10,8 +10,8 @@ class GLM:
             content: str
     ):
         self.client = OpenAI(
-            api_key="sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH",
-            base_url="https://api.agicto.cn/v1",
+            api_key="",
+            base_url="",
         )
         self.model_name = model_name
         self.content = content

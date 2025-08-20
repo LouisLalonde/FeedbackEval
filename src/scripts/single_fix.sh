@@ -2,7 +2,7 @@
 export PYTHONPATH=$(pwd)/...
 DATASET="HumanEval"
 # FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_feedback" "simple_feedback")
-FEEDBACK_TYPES=("llm_gt_feedback")
+FEEDBACK_TYPES=("mixed_feedback")
 declare -A MODELS=(
     ["GPT"]="gpt-4o-2024-11-20"
     ["Claude"]="claude-3-5-sonnet-20241022"
