@@ -16,10 +16,19 @@ def setup_logging():
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler('llm_gt.log', encoding='utf-8'),
-        ]
+            logging.FileHandler('llm_gt_humaneval.log', encoding='utf-8', delay=False),
+        ],
+        force=True  # 覆盖任何现有的日志配置
     )
-    return logging.getLogger(__name__)
+
+    # 获取logger并设置立即刷新
+    logger = logging.getLogger(__name__)
+
+    # 设置所有handler立即刷新
+    for handler in logging.getLogger().handlers:
+        handler.stream.flush()
+
+    return logger
 
 logger = setup_logging()
 
@@ -43,9 +52,9 @@ def single_round_fix_code(file_path, model_name, model_version, feedback, datase
                 is_few_shot=use_few_shot,
                 is_instructions=use_instructions
             )
-            logger.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n")
+            logger.info(f"模型：{model_name}，反馈{feedback}，任务{ques["task_id"]}，prompt: \n{prompt}\n")
             fixed_code = gen_solution(model_name, model_version, prompt)
-            logger.info(f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，fixed_code: \n{fixed_code}\n")
+            logger.info(f"模型：{model_name}，反馈{feedback}，任务{ques["task_id"]}，fixed_code: \n{fixed_code}\n")
             fixed_results.append({
                 "source": result["source"],
                 "false_code": result["generate_code"],
@@ -56,7 +65,8 @@ def single_round_fix_code(file_path, model_name, model_version, feedback, datase
             fixed_list.append({
                 "task_id": ques["task_id"],
                 "fixed_results": fixed_results,
-                "test": ques["test"]
+                "test": ques["test"],
+                "correct_code": ques["correct_code"]
             })
         elif dataset == "CoderEval":
             fixed_list.append({

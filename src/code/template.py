@@ -99,7 +99,8 @@ the @@Existing Code against the @@Correct Code to highlight deviations, misunder
         prompt = """
 You are a highly skilled and thoughtful programming assistant tasked with guiding a programmer to improve the code. 
 Your primary goal is to analyze the @@Existing Code to identify potential issues and offer suggestions for improvement.
-Carefully review the @@Existing Code and understand its structure, logic, and functionality.
+Carefully review the @@Existing Code and understand its structure, logic, and functionality. Then, compare 
+the @@Existing Code against the @@Correct Code to highlight deviations, misunderstandings, or missed optimizations.
 
 #Requirement: 
 1. Offer guidance in a clear and understandable manner, explaining the rationale behind each suggestion.
@@ -107,8 +108,11 @@ Carefully review the @@Existing Code and understand its structure, logic, and fu
 3. Please respond in no more than three sentences.
 @@Existing Code
 {}
+
+@@Correct Code
+{}
 """.strip().format(
-            code
+            code, correct_code
         )
     else:
         raise ValueError(f"Invalid dataset: {dataset}")

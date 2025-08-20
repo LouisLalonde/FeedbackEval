@@ -21,10 +21,19 @@ def setup_logging():
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler('feedback_processing.log', encoding='utf-8'),
-        ]
+            logging.FileHandler('feedback_processing_humaneval.log', encoding='utf-8', delay=False),
+        ],
+        force=True  # 覆盖任何现有的日志配置
     )
-    return logging.getLogger(__name__)
+
+    # 获取logger并设置立即刷新
+    logger = logging.getLogger(__name__)
+
+    # 设置所有handler立即刷新
+    for handler in logging.getLogger().handlers:
+        handler.stream.flush()
+
+    return logger
 
 logger = setup_logging()
 
@@ -254,7 +263,7 @@ def eval_feedback(dataset, file_path):
     data_list = read_jsonl(file_path)
 
     for idx, data in enumerate(data_list):
-        logger.debug(f"处理第 {idx + 1} 条数据记录 (ID: {data['_id']}")
+        logger.debug(f"处理第 {idx + 1} 条数据记录 (ID: {data['task_id']}")
         filtered_results = []
         list_results = data['false_results']
         logger.debug(f"该记录包含 {len(list_results)} 个错误结果需要处理")
@@ -311,8 +320,8 @@ def eval_feedback(dataset, file_path):
         #         continue
         # data['false_results'] = filtered_results
 
-    write_jsonl('../../dataset/CoderEval/CoderEval_feedback.jsonl', data_list)
+    write_jsonl('../../dataset/HumanEval/HumanEval_feedback.jsonl', data_list)
 
 
 if __name__ == '__main__':
-    eval_feedback('CoderEval', '../../dataset/CoderEval/CoderEval_feedback.jsonl')
+    eval_feedback('HumanEval', '../../dataset/HumanEval/HumanEval_feedback.jsonl')
