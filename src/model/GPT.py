@@ -1,12 +1,15 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from openai import OpenAI
 from tenacity import retry, wait_random_exponential, stop_after_attempt
-from src.code.utils import base_url
+from src.code.utils import api_key, base_url
 
 
 class GPT:
-    def __init__(self, api_key: str, model_name: str, content: str):
+    def __init__(self, model_name: str, content: str):
         self.client = OpenAI(
-            api_key="",
+            api_key=api_key,
             base_url=base_url,
         )
         self.model_name = model_name
@@ -27,7 +30,6 @@ class GPT:
 
 if __name__ == "__main__":
     gpt = GPT(
-        api_key="",
         model_name="gpt-4o-mini",
         content="Hello, how are you?",
     )

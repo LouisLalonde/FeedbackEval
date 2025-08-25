@@ -1,6 +1,6 @@
 from tqdm import tqdm
 from src.model.GPT import GPT
-from utils import read_jsonl, write_jsonl, api_key
+from utils import read_jsonl, write_jsonl, api_key, setup_logging
 from template import build_gpt_prompt, build_gpt_gt_prompt
 from diagnostic_handlers import E0602_handler, E1101_handler, E0102_handler
 import subprocess
@@ -9,45 +9,35 @@ import sys
 import os
 import json
 import ast
-import random
 import tempfile
-import logging
 
-
-# 配置日志
-def setup_logging():
-    """设置日志配置"""
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler('feedback_processing_humaneval.log', encoding='utf-8', delay=False),
-        ],
-        force=True  # 覆盖任何现有的日志配置
-    )
-
-    # 获取logger并设置立即刷新
-    logger = logging.getLogger(__name__)
-
-    # 设置所有handler立即刷新
-    for handler in logging.getLogger().handlers:
-        handler.stream.flush()
-
-    return logger
-
-logger = setup_logging()
+logger = setup_logging("HumanEval", "feedback")
 
 
 def run_pytest(code, timeout=10):
     try:
-        with tempfile.NamedTemporaryFile(suffix='.py', delete=False) as temp_file:
-            temp_file.write(code.encode('utf-8'))
+        with tempfile.NamedTemporaryFile(suffix=".py", delete=False) as temp_file:
+            temp_file.write(code.encode("utf-8"))
             temp_filename = temp_file.name
 
-        result = subprocess.run(['pytest', '--tb=short', '-q', temp_filename], capture_output=True, text=True,
-                                timeout=timeout)
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                "--tb=short",
+                "-q",
+                temp_filename,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            cwd=os.path.dirname(temp_filename),
+        )
         exit_code = result.returncode
-        res = result.stdout.splitlines()[4:-4]  # Keep only the relevant lines from pytest output
+        res = result.stdout.splitlines()[
+            4:-4
+        ]  # Keep only the relevant lines from pytest output
         test_feedback = "\n".join(res)
     except subprocess.TimeoutExpired:
         exit_code = -1
@@ -91,27 +81,32 @@ class Process(multiprocessing.Process):
 dict_std_nonestd = {
     "/home/travis/builds/repos/standalone/neo4j-_meta-deprecated.py": "/home/travis/builds/repos/neo4j---neo4j-python-driver/src/neo4j/_meta_deprecated_passk_validte.py",
     "/home/travis/builds/repos/standalone/neo4j-work-query-unit_of_work.py": "/home/travis/builds/repos/neo4j---neo4j-python-driver/src/neo4j/_work/query_unit_of_work_passk_validte.py",
-    "/home/travis/builds/repos/standalone/krake-krake-controller-kubernetes-hooks-on.py": "/home/travis/builds/repos/rak-n-rok---Krake/krake/krake/controller/kubernetes/hooks_on_passk_validte.py"}
+    "/home/travis/builds/repos/standalone/krake-krake-controller-kubernetes-hooks-on.py": "/home/travis/builds/repos/rak-n-rok---Krake/krake/krake/controller/kubernetes/hooks_on_passk_validte.py",
+}
 
 
 def run_coder_eval_test(_id, code):
-    f = open("CoderEval4Python.json", 'r', encoding="utf-8")
+    f = open("CoderEval4Python.json", "r", encoding="utf-8")
     content = f.read()
     f.close()
 
     content_json = json.loads(content)
     collection = {}
-    for l in content_json['RECORDS']:
+    for l in content_json["RECORDS"]:
         collection[l["_id"]] = l
     kk = 0
     project_path = "/home/travis/builds/repos/"
     dict_id_file = {}
     for keyy in collection:
         dictTemp = collection[keyy]
-        save_data = project_path + "standalone/" + dictTemp["file_path"].replace(".py", "").replace("/",
-
-                                                                                                    "-") + "-" + \
-                    dictTemp["name"] + ".py"
+        save_data = (
+            project_path
+            + "standalone/"
+            + dictTemp["file_path"].replace(".py", "").replace("/", "-")
+            + "-"
+            + dictTemp["name"]
+            + ".py"
+        )
         if save_data in dict_std_nonestd.keys():
             save_data = dict_std_nonestd[save_data]
             if os.path.exists(save_data):
@@ -121,15 +116,19 @@ def run_coder_eval_test(_id, code):
             kk += 1
             dict_id_file[dictTemp["_id"]] = save_data
         else:
-            file_path = dictTemp['file_path']
-            if project_path + dictTemp["project"].replace("/",
-                                                          "---") == "/home/travis/builds/repos/neo4j---neo4j-python-driver":
-                save_data = os.path.join(project_path + dictTemp['project'].replace("/", "---") + "/src",
-                                         file_path).replace(
-                    ".py", "_" + dictTemp["name"] + "_passk_validte.py")
+            file_path = dictTemp["file_path"]
+            if (
+                project_path + dictTemp["project"].replace("/", "---")
+                == "/home/travis/builds/repos/neo4j---neo4j-python-driver"
+            ):
+                save_data = os.path.join(
+                    project_path + dictTemp["project"].replace("/", "---") + "/src",
+                    file_path,
+                ).replace(".py", "_" + dictTemp["name"] + "_passk_validte.py")
             else:
-                save_data = os.path.join(project_path + dictTemp['project'].replace("/", "---"), file_path).replace(
-                    ".py", "_" + dictTemp["name"] + "_passk_validte.py")
+                save_data = os.path.join(
+                    project_path + dictTemp["project"].replace("/", "---"), file_path
+                ).replace(".py", "_" + dictTemp["name"] + "_passk_validte.py")
             if save_data in dict_std_nonestd.keys():
                 save_data = dict_std_nonestd[save_data]
 
@@ -140,7 +139,7 @@ def run_coder_eval_test(_id, code):
     content_doc = collection[_id]
     if content_doc is None:
         return
-    f_save_data = open(dict_id_file[str(_id)], 'r')
+    f_save_data = open(dict_id_file[str(_id)], "r")
     file_content = f_save_data.read()
     f_save_data.close()
     file_content_list = file_content.split("\n")
@@ -151,7 +150,10 @@ def run_coder_eval_test(_id, code):
     for node in ast.walk(ast_file):
         if isinstance(node, ast.FunctionDef):
             temp_method_name = node.name
-            if content_doc["name"] != temp_method_name and "_" + content_doc["name"] != temp_method_name:
+            if (
+                content_doc["name"] != temp_method_name
+                and "_" + content_doc["name"] != temp_method_name
+            ):
                 continue
             start_line = node.lineno
             end_line = node.end_lineno
@@ -184,12 +186,15 @@ def run_coder_eval_test(_id, code):
         new_code = code
     out_data = new_data.replace("<insert generated code here>", new_code)
     save_data_new = dict_id_file[str(_id)]
-    f = open(save_data_new.replace(".py", str(code_num) + ".py"), 'w')
+    f = open(save_data_new.replace(".py", str(code_num) + ".py"), "w")
     f.write(out_data)
     f.close()
     try:
-        process = subprocess.Popen([sys.executable, save_data_new.replace(".py", str(code_num) + ".py")],
-                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(
+            [sys.executable, save_data_new.replace(".py", str(code_num) + ".py")],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
         output, error = process.communicate(timeout=30)
         exit_code = process.returncode
         test_feedback = error.decode("utf-8") if exit_code != 0 and error else ""
@@ -213,17 +218,23 @@ def run_pylint(code_content):
     code_lines = code_content.splitlines()
     format_string = "{line}:{C}:{msg_id}:{obj}:{module}:{msg}:{symbol}"
     process = subprocess.Popen(
-        ['pylint', "--disable=C,R", '--from-stdin', 'lint.py', f"--msg-template='{format_string}'"],
+        [
+            "pylint",
+            "--disable=C,R",
+            "--from-stdin",
+            "lint.py",
+            f"--msg-template='{format_string}'",
+        ],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        encoding='utf-8'
+        encoding="utf-8",
     )
     stdout, stderr = process.communicate(input=code_content)
     results = []
     for line in stdout.splitlines():
-        parts = line.split(':')
+        parts = line.split(":")
         if len(parts) < 7:
             continue
         try:
@@ -243,15 +254,20 @@ def run_pylint(code_content):
 
 
 def analyze_pylint_message(diagnostic_body) -> str:
-    diagnostic_type = diagnostic_body['diagnostic_type']
-    default_diagnostic_message = "In line: " + diagnostic_body["line_content"] + " . " + diagnostic_body["message"]
+    diagnostic_type = diagnostic_body["diagnostic_type"]
+    default_diagnostic_message = (
+        "In line: "
+        + diagnostic_body["line_content"]
+        + " . "
+        + diagnostic_body["message"]
+    )
 
     diagnostic_handlers = {
-        'E0213': lambda _: "",  # Skip 'no-self-argument' error
-        'E0001': lambda _: default_diagnostic_message,
-        'E0602': E0602_handler,  # undefined-variable
-        'E1101': E1101_handler,  # no-member
-        'E0102': E0102_handler,  # function redefined
+        "E0213": lambda _: "",  # Skip 'no-self-argument' error
+        "E0001": lambda _: default_diagnostic_message,
+        "E0602": E0602_handler,  # undefined-variable
+        "E1101": E1101_handler,  # no-member
+        "E0102": E0102_handler,  # function redefined
     }
     handler = diagnostic_handlers.get(diagnostic_type)
     if handler:
@@ -265,7 +281,7 @@ def eval_feedback(dataset, file_path):
     for idx, data in enumerate(data_list):
         logger.debug(f"处理第 {idx + 1} 条数据记录 (ID: {data['task_id']}")
         filtered_results = []
-        list_results = data['false_results']
+        list_results = data["false_results"]
         logger.debug(f"该记录包含 {len(list_results)} 个错误结果需要处理")
 
         success_count = 0
@@ -276,16 +292,16 @@ def eval_feedback(dataset, file_path):
                 # 构建提示并获取LLM反馈
                 prompt = build_gpt_gt_prompt(
                     dataset,
-                    result['generate_code'],
-                    data.get('correct_code', None),
-                    data.get('docstring', None),
-                    data.get('oracle_context', None)
+                    result["generate_code"],
+                    data.get("correct_code", None),
+                    data.get("docstring", None),
+                    data.get("oracle_context", None),
                 )
 
                 logger.debug("正在调用GPT模型生成反馈...")
                 llm = GPT(api_key, "gpt-4o-mini", prompt)
                 llm_feedback = llm.generation()
-                result['llm_gt_feedback'] = llm_feedback
+                result["llm_gt_feedback"] = llm_feedback
                 filtered_results.append(result)
                 success_count += 1
                 logger.debug(f"成功生成第 {result_idx + 1} 个反馈")
@@ -294,7 +310,7 @@ def eval_feedback(dataset, file_path):
                 logger.error(f"处理第 {result_idx + 1} 个错误结果时出错: {e}")
                 continue
 
-        data['false_results'] = filtered_results
+        data["false_results"] = filtered_results
         logger.info(f"完成处理第 {idx + 1} 条数据记录，成功生成 {success_count} 个反馈")
 
         # filtered_results = []
@@ -320,8 +336,8 @@ def eval_feedback(dataset, file_path):
         #         continue
         # data['false_results'] = filtered_results
 
-    write_jsonl('../../dataset/HumanEval/HumanEval_feedback.jsonl', data_list)
+    write_jsonl("../../dataset/HumanEval/HumanEval_feedback.jsonl", data_list)
 
 
-if __name__ == '__main__':
-    eval_feedback('HumanEval', '../../dataset/HumanEval/HumanEval_feedback.jsonl')
+if __name__ == "__main__":
+    eval_feedback("HumanEval", "../../dataset/HumanEval/HumanEval_feedback.jsonl")
