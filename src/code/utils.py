@@ -110,12 +110,16 @@ def gen_solution(model_name, model_version, prompt):
         llm = model_class(model_version, prompt)
         generate_result = llm.generation()
 
-        match = re.search(r"```python\s*(.*?)\s*```", generate_result, re.DOTALL)
+        match = re.search(
+            r"<repaired_code>(.*?)</repaired_code>", generate_result, re.DOTALL
+        )
         if match:
             solution = match.group(1).strip()
             return solution
         else:
-            raise ValueError("No Python code block found in the generated result.")
+            raise ValueError(
+                "No code found between <repaired_code> tags in the generated result."
+            )
 
     except Exception as e:
         print(f"Error during code generation: {e}")

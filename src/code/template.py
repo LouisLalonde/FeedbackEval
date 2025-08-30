@@ -199,7 +199,8 @@ def calculate_average(numbers):
         prompt_sections.append("\n" + instruction_text)
 
     prompt_sections.append(
-        "\nPlease return the corrected code in the following format:\n```python\n# Your codes here\n```")
+        "\nThe output must strictly adhere to the specified format, with all HTML tags included in their entirety:\n<repaired_code>\nProvide the corrected code here.\n</repaired_code>"
+    )
 
     prompt = "\n".join(prompt_sections)
     return prompt
