@@ -1,14 +1,15 @@
 #!/bin/bash
 export PYTHONPATH=$(pwd)/...
-DATASET="CoderEval"
+DATASET="HumanEval"
 
-FEEDBACK_TYPES=("llm_gt_feedback" "mixed_feedback")
+FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_feedback" "llm_gt_feedback" "simple_feedback" "mixed_feedback")
 declare -A MODELS=(
-    #  ["GPT"]="gpt-4o-2024-11-20"
-    #  ["Claude"]="claude-3-5-sonnet-20241022"
+      ["GPT"]="gpt-4o-2024-11-20"
+    #   ["Claude"]="claude-3-5-sonnet-20241022"
     #  ["Gemini"]="gemini-1.5-pro"
-     ["GLM"]="glm-4-plus"
+    #  ["GLM"]="glm-4-plus"
     #  ["Qwen"]="qwen2.5-72b-instruct"
+    #  ["Deepseek"]="deepseek-r1-250528"
 )
 
 for MODEL in "${!MODELS[@]}"; do

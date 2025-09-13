@@ -1,4 +1,10 @@
 from tqdm import tqdm
+import sys
+import os
+
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 from src.model.GPT import GPT
 from utils import read_jsonl, write_jsonl, api_key, setup_logging
 from template import build_gpt_prompt, build_gpt_gt_prompt

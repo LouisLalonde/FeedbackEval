@@ -5,7 +5,14 @@ from tqdm import tqdm
 from feedback import run_test, run_pylint
 import os
 from collections import defaultdict
-from utils import FEEDBACK_TYPES, read_jsonl, write_jsonl, gen_solution, setup_logging
+from utils import (
+    FEEDBACK_TYPES,
+    read_jsonl,
+    write_jsonl,
+    get_model_response,
+    extract_repaired_code,
+    setup_logging,
+)
 from template import build_gpt_prompt, build_gpt_gt_prompt, build_repair_prompt
 
 
@@ -21,88 +28,58 @@ def single_round_fix_code(
     use_cot,
     use_few_shot,
     use_instructions,
+    use_es_shot,
+    use_sa,
+    use_sg_icl,
+    use_sbp,
+    use_rr,
 ):
     print(f"Evaluating file: {file_path}")
     fixed_list = []
     ques_list = read_jsonl(file_path)
 
-    # 加载原始反馈数据集
-    feedback_dataset_path = os.path.join(
-        "dataset", dataset, f"{dataset}_feedback_test.jsonl"
-    )
-    feedback_data = {}
-    feedback_dataset = read_jsonl(feedback_dataset_path)
-    for item in feedback_dataset:
-        feedback_data[item["_id"]] = item
-    print(f"Loaded feedback dataset from: {feedback_dataset_path}")
-
     for ques in tqdm(ques_list, total=len(ques_list), desc="Fixing code"):
         fixed_results = []
-        list_results = ques["fixed_results"]
+        list_results = ques["false_results"]
         for result in list_results:
-            if not result["fixed_code"]:
-                # 从原始反馈数据集中获取反馈
-                feedback_item = feedback_data.get(ques["_id"])
-                if feedback_item and "false_results" in feedback_item:
-                    # 查找匹配的false_result
-                    matching_feedback = None
-                    for false_result in feedback_item["false_results"]:
-                        if false_result["generate_code"] == result["false_code"]:
-                            matching_feedback = false_result
-                            break
-
-                    if matching_feedback:
-                        if feedback == "mixed_feedback":
-                            actual_feedback = get_mixed_feedback(
-                                dataset,
-                                result["false_code"],
-                                feedback_item,
-                                matching_feedback,
-                            )
-                        else:
-                            actual_feedback = matching_feedback.get(
-                                feedback, "The code is wrong. Please fix it."
-                            )
-                # if feedback == "mixed_feedback":
-                #     actual_feedback = get_mixed_feedback(
-                #         dataset, result["false_code"], ques, result
-                #     )
-                # else:
-                #     actual_feedback = result.get(
-                #         feedback, "The code is wrong. Please fix it."
-                #     )
-                prompt = build_repair_prompt(
-                    solution=result["false_code"],
-                    feedback=actual_feedback,
-                    docstring=ques.get("docstring", None) if use_docstring else None,
-                    context=ques.get("oracle_context", None) if use_context else None,
-                    is_persona=use_persona,
-                    is_cot=use_cot,
-                    is_few_shot=use_few_shot,
-                    is_instructions=use_instructions,
-                )
-                logger.info(
-                    f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n"
-                )
-                fixed_code = gen_solution(model_name, model_version, prompt)
-                logger.info(
-                    f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，fixed_code: \n{fixed_code}\n"
-                )
-                fixed_results.append(
-                    {
-                        "source": result["source"],
-                        "false_code": result["false_code"],
-                        "fixed_code": fixed_code,
-                    }
+            if feedback == "mixed_feedback":
+                actual_feedback = get_mixed_feedback(
+                    dataset, result["generate_code"], ques, result
                 )
             else:
-                fixed_results.append(
-                    {
-                        "source": result["source"],
-                        "false_code": result["false_code"],
-                        "fixed_code": result["fixed_code"],
-                    }
-                )
+                actual_feedback = result.get(feedback, None)
+            prompt = build_repair_prompt(
+                solution=result["generate_code"],
+                feedback=actual_feedback,
+                docstring=ques.get("docstring", None) if use_docstring else None,
+                context=ques.get("oracle_context", None) if use_context else None,
+                current_task=ques,  # 传递当前任务信息给BM25匹配
+                dataset=dataset,  # 传递数据集信息
+                is_persona=use_persona,
+                is_cot=use_cot,
+                is_few_shot=use_few_shot,
+                is_instructions=use_instructions,
+                is_es_shot=use_es_shot,
+                is_sa=use_sa,
+                is_sg_icl=use_sg_icl,
+                is_sbp=use_sbp,
+                is_rr=use_rr,
+            )
+            logger.info(
+                f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n"
+            )
+            response = get_model_response(model_name, model_version, prompt)
+            fixed_code = extract_repaired_code(response)
+            logger.info(
+                f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，response: \n{response}\n"
+            )
+            fixed_results.append(
+                {
+                    "source": result["source"],
+                    "false_code": result["generate_code"],
+                    "fixed_code": fixed_code,
+                }
+            )
 
         if dataset == "HumanEval":
             fixed_list.append(
@@ -121,14 +98,15 @@ def single_round_fix_code(
                     "level": ques["level"],
                     "oracle_context": ques["oracle_context"],
                     "docstring": ques["docstring"],
-                    # "correct_code": ques["correct_code"],
+                    "correct_code": ques["correct_code"],
                 }
             )
         else:
             raise ValueError(f"Invalid dataset: {dataset}")
 
+    
     if all([use_docstring, use_context, use_persona, use_instructions]) and not any(
-        [use_cot, use_few_shot]
+        [use_cot, use_few_shot, use_sa, use_sg_icl, use_sbp, use_rr, use_es_shot]
     ):
         save_dir = os.path.join("results", model_name, dataset, f"single")
         os.makedirs(save_dir, exist_ok=True)
@@ -138,7 +116,9 @@ def single_round_fix_code(
         os.makedirs(save_dir, exist_ok=True)
         config_suffix = (
             f"doc_{int(use_docstring)}_ctx_{int(use_context)}_"
-            f"persona_{int(use_persona)}_cot_{int(use_cot)}_fewshot_{int(use_few_shot)}_instr_{int(use_instructions)}"
+            f"per_{int(use_persona)}_cot_{int(use_cot)}_shot_"
+            f"{int(use_few_shot)}_ins_{int(use_instructions)}_sa_{int(use_sa)}_sg_{int(use_sg_icl)}"
+            f"_sbp_{int(use_sbp)}_rr_{int(use_rr)}_es_{int(use_es_shot)}"
         )
         print(config_suffix)
         save_path = os.path.join(
@@ -236,13 +216,16 @@ def multi_round_fix_code(
                         current_feedback,
                         ques.get("docstring", None),
                         ques.get("oracle_context", None),
+                        current_task=ques,  # 传递当前任务信息给BM25匹配
+                        dataset=dataset,  # 传递数据集信息
                     )
                     logging.info(
                         f"模型：{model_name}，反馈{feedback}，任务{ques['_id']}，prompt: \n{prompt}\n"
                     )
-                    fixed_code = gen_solution(model_name, model_version, prompt)
+                    response = get_model_response(model_name, model_version, prompt)
+                    fixed_code = extract_repaired_code(response)
                     logging.info(
-                        f"模型：{model_name}，反馈{feedback}，任务{ques['_id']}，fixed_code: \n{fixed_code}\n"
+                        f"模型：{model_name}，反馈{feedback}，任务{ques['_id']}，response: \n{response}\n"
                     )
 
                     if not fixed_code:
@@ -313,7 +296,7 @@ def multi_round_fix_code(
         else:
             raise ValueError(f"Invalid dataset: {dataset}")
 
-    save_dir = os.path.join("results", model_name, dataset)
+    save_dir = os.path.join("results", model_name, dataset, f"multi")
     save_path = os.path.join(save_dir, f"{model_version}_multi_round_{feedback}.jsonl")
     os.makedirs(save_dir, exist_ok=True)
     write_jsonl(save_path, fixed_list)
@@ -330,16 +313,22 @@ def pass_rate_single_round(input_path, dataset):
             fixed_code = result["fixed_code"]
             if fixed_code:
                 num_tot += 1
-                exit_code, test_feedback = run_test(
-                    dataset, fixed_code, data.get("_id", None), data.get("test", None)
-                )
-                result["isTrue"] = exit_code in (0, 5)
-                if exit_code not in (0, 5):
-                    result["test_feedback"] = test_feedback
-                num_accept += result["isTrue"]
+                if "isTrue" in result:
+                    num_accept += result["isTrue"]
+                else:
+                    exit_code, test_feedback = run_test(
+                        dataset,
+                        fixed_code,
+                        data.get("_id", None),
+                        data.get("test", None),
+                    )
+                    result["isTrue"] = exit_code in (0, 5)
+                    if exit_code not in (0, 5):
+                        result["test_feedback"] = test_feedback
+                    num_accept += result["isTrue"]
 
     write_jsonl(input_path, eval_data)
-    print(f"Score: {num_accept / num_tot * 100:.2f}")
+    print(f"Score: {num_accept / num_tot * 100:.2f}, {num_accept}/{num_tot}")
 
 
 def pass_rate_multi_round(input_path):
@@ -364,7 +353,9 @@ def pass_rate_multi_round(input_path):
     for round_num in sorted_rounds:
         cumulative_passed += pass_rate_per_round[round_num]
         pass_rate = cumulative_passed / total if total > 0 else 0
-        print(f"Round {round_num}: Pass rate = {pass_rate:.2%}")
+        print(
+            f"Round {round_num}: Pass rate = {pass_rate:.2%}, {cumulative_passed}/{total}"
+        )
 
 
 def get_mixed_feedback(dataset, code, ques_data, existing_feedbacks=None):
@@ -443,6 +434,13 @@ def main():
     parser.add_argument(
         "--no_instructions", action="store_false", help="Whether to use instructions"
     )
+    parser.add_argument("--is_es_shot", action="store_true", help="Whether to use ES-Shot")
+    parser.add_argument("--is_sa", action="store_true", help="Whether to use SA")
+    parser.add_argument(
+        "--is_sg_icl", action="store_true", help="Whether to use SG-ICL"
+    )
+    parser.add_argument("--is_sbp", action="store_true", help="Whether to use SBP")
+    parser.add_argument("--is_rr", action="store_true", help="Whether to use RR")
     args = parser.parse_args()
 
     global logger
@@ -451,11 +449,9 @@ def main():
     )
 
     if args.function == "single_fix":
-        # input_path = os.path.join(
-        #     "dataset", args.dataset, f"{args.dataset}_feedback_test.jsonl"
-        # )
-        input_dir = os.path.join("results", args.model, args.dataset, f"single")
-        input_path = os.path.join(input_dir, f"{args.version}_{args.feedback}.jsonl")
+        input_path = os.path.join(
+            "dataset", args.dataset, f"{args.dataset}_feedback_test_filtered.jsonl"
+        )
         single_round_fix_code(
             input_path,
             args.model,
@@ -468,6 +464,11 @@ def main():
             args.is_cot,
             args.is_few_shot,
             args.no_instructions,
+            args.is_es_shot,
+            args.is_sa,
+            args.is_sg_icl,
+            args.is_sbp,
+            args.is_rr,
         )
     elif args.function == "single_score":
         input_path = os.path.join(

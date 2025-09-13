@@ -104,22 +104,24 @@ def write_jsonl(file_path, data_list):
             file.write(json_line + '\n')
 
 
-def gen_solution(model_name, model_version, prompt):
+def get_model_response(model_name, model_version, prompt):
     try:
-        model_class = getattr(importlib.import_module(f"src.model.{model_name}"), model_name)
+        model_class = getattr(
+            importlib.import_module(f"src.model.{model_name}"), model_name
+        )
         llm = model_class(model_version, prompt)
         generate_result = llm.generation()
-
-        match = re.search(
-            r"<repaired_code>(.*?)</repaired_code>", generate_result, re.DOTALL
-        )
-        if match:
-            solution = match.group(1).strip()
-            return solution
-        else:
-            raise ValueError(
-                "No code found between <repaired_code> tags in the generated result."
-            )
+        return generate_result
 
     except Exception as e:
         print(f"Error during code generation: {e}")
+
+def extract_repaired_code(generated_text):
+    try:
+        match = re.search(r"<repaired_code>(.*?)</repaired_code>", generated_text, re.DOTALL)
+        if match:
+            return match.group(1).strip()
+        else:
+            raise ValueError("No code found between <repaired_code> tags in the generated result.")
+    except Exception as e:
+        print(f"Error extracting repaired code: {e}")
