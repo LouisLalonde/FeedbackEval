@@ -1,4 +1,5 @@
 .idea/
 logs/
+log/
 src/model/__pycache__/
 src/code/__pycache__/

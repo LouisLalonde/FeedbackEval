@@ -25,7 +25,6 @@ class Deepseek:
         )
         if response.choices[0].message.content:
             output = response.choices[0].message.content
-            # logging.info(f"Model Output: {output}")  # 写入日志
             return output
         else:
             raise ValueError("Empty response from API")

@@ -284,63 +284,47 @@ def analyze_pylint_message(diagnostic_body) -> str:
 def eval_feedback(dataset, file_path):
     data_list = read_jsonl(file_path)
 
-    for idx, data in enumerate(data_list):
-        logger.debug(f"处理第 {idx + 1} 条数据记录 (ID: {data['task_id']}")
+    for data in tqdm(
+        data_list, total=len(data_list), desc="Processing feedback dataset:"
+    ):
+
         filtered_results = []
         list_results = data["false_results"]
-        logger.debug(f"该记录包含 {len(list_results)} 个错误结果需要处理")
-
-        success_count = 0
-        for result_idx, result in enumerate(list_results):
+        for result in list_results:
             try:
-                logger.debug(f"处理第 {result_idx + 1} 个错误结果")
-
-                # 构建提示并获取LLM反馈
-                prompt = build_gpt_gt_prompt(
+                exit_code, test_feedback = run_test(
                     dataset,
                     result["generate_code"],
-                    data.get("correct_code", None),
-                    data.get("docstring", None),
-                    data.get("oracle_context", None),
+                    data.get("_id", None),
+                    data.get("test", None),
                 )
 
-                logger.debug("正在调用GPT模型生成反馈...")
-                llm = GPT(api_key, "gpt-4o-mini", prompt)
-                llm_feedback = llm.generation()
-                result["llm_gt_feedback"] = llm_feedback
-                filtered_results.append(result)
-                success_count += 1
-                logger.debug(f"成功生成第 {result_idx + 1} 个反馈")
-
+                if exit_code not in (0, 5):  # Filtering out failed codes
+                    result["test_feedback"] = test_feedback
+                    result["compiler_feedback"] = run_pylint(result["generate_code"])
+                    llm_skilled_prompt = build_gpt_prompt(
+                        dataset,
+                        result["generate_code"],
+                        data.get("docstring", None),
+                        data.get("oracle_context", None),
+                    )
+                    llm = GPT(api_key, "gpt-4o-mini", llm_skilled_prompt)
+                    result["llm_skilled_feedback"] = llm.generation()
+                    llm_expert_prompt = build_gpt_gt_prompt(
+                        dataset,
+                        result["generate_code"],
+                        data.get("correct_code", None),
+                        data.get("docstring", None),
+                        data.get("oracle_context", None),
+                    )
+                    llm = GPT(api_key, "gpt-4o-mini", llm_expert_prompt)
+                    result["llm_expert_feedback"] = llm.generation()
+                    result["minimal_feedback"] = "The code is wrong. Please fix it."
+                    filtered_results.append(result)
             except Exception as e:
-                logger.error(f"处理第 {result_idx + 1} 个错误结果时出错: {e}")
+                logger.error(f"Error getting feedback: {e}")
                 continue
-
         data["false_results"] = filtered_results
-        logger.info(f"完成处理第 {idx + 1} 条数据记录，成功生成 {success_count} 个反馈")
-
-        # filtered_results = []
-        # list_results = data['false_results']
-        # for result in list_results:
-        #     try:
-        #         # exit_code, test_feedback = run_test(dataset, result['generate_code'], data.get('_id', None),
-        #         #                                     data.get('test', None))
-        #
-        #         # if exit_code not in (0, 5):  # Filtering out failed codes
-        #             # result['test_feedback'] = test_feedback
-        #             # result['compiler_feedback'] = run_pylint(result['generate_code'])
-        #             # prompt = build_gpt_prompt(dataset, result['generate_code'], data.get('docstring', None),
-        #             #                           data.get('oracle_context', None))
-        #             prompt = build_gpt_gt_prompt(dataset, result['generate_code'], data.get('correct_code', None),
-        #                                          data.get('docstring', None), data.get('oracle_context', None))
-        #             llm = GPT(api_key, "gpt-4o-mini", prompt)
-        #             result['llm_gt_feedback'] = llm.generation()
-        #             # result['simple_feedback'] = "The code is wrong. Please fix it."
-        #             filtered_results.append(result)
-        #     except Exception as e:
-        #         print(f"Error getting feedback: {e}")
-        #         continue
-        # data['false_results'] = filtered_results
 
     write_jsonl("../../dataset/HumanEval/HumanEval_feedback.jsonl", data_list)
 

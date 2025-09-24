@@ -53,8 +53,8 @@ def single_round_fix_code(
                 feedback=actual_feedback,
                 docstring=ques.get("docstring", None) if use_docstring else None,
                 context=ques.get("oracle_context", None) if use_context else None,
-                current_task=ques,  # 传递当前任务信息给BM25匹配
-                dataset=dataset,  # 传递数据集信息
+                current_task=ques,  
+                dataset=dataset,  
                 is_persona=use_persona,
                 is_cot=use_cot,
                 is_few_shot=use_few_shot,
@@ -66,12 +66,12 @@ def single_round_fix_code(
                 is_rr=use_rr,
             )
             logger.info(
-                f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，prompt: \n{prompt}\n"
+                f"Model：{model_name}，Feedback：{feedback}，Task：{ques["_id"]}，prompt: \n{prompt}\n"
             )
             response = get_model_response(model_name, model_version, prompt)
             fixed_code = extract_repaired_code(response)
             logger.info(
-                f"模型：{model_name}，反馈{feedback}，任务{ques["_id"]}，response: \n{response}\n"
+                f"Model：{model_name}，Feedback：{feedback}，Task：{ques["_id"]}，response: \n{response}\n"
             )
             fixed_results.append(
                 {
@@ -359,10 +359,8 @@ def pass_rate_multi_round(input_path):
 
 
 def get_mixed_feedback(dataset, code, ques_data, existing_feedbacks=None):
-    """获取混合反馈，优先使用已存在的反馈"""
     existing_feedbacks = existing_feedbacks or {}
 
-    # 优先使用已存储的反馈，没有则重新生成
     test_feedback = existing_feedbacks.get("test_feedback")
     if test_feedback is None:
         test_feedback = run_test(
@@ -386,12 +384,11 @@ def get_mixed_feedback(dataset, code, ques_data, existing_feedbacks=None):
             ),
         ).generation()
 
-    # 组合所有反馈
+    # Combine all feedbacks
     feedback_parts = [
         "The code is wrong. Please fix it.",
-        f"{llm_gt_feedback}",
-        "Here is some additional feedback information from the test cases and "
-        "static analysis tools for your reference:",
+        str(llm_gt_feedback),
+        "Here is some additional feedback information from the test cases and static analysis tools for your reference:",
         f"{test_feedback}\n{compiler_feedback}",
     ]
     return "\n".join(feedback_parts)

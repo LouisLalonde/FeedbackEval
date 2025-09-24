@@ -6,32 +6,32 @@ import logging
 import os
 from datetime import datetime
 
-api_key = "sk-wTgnnvK6VypulivVXfhGULEQUd9gziz4mvAQaWL8jtjdCiOH"
-base_url = "https://api.agicto.cn/v1"
-FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_feedback", "llm_gt_feedback", "simple_feedback", "mixed_feedback"]
+api_key = ""
+base_url = ""
+FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_skilled_feedback", "llm_expert_feedback", "minimal_feedback", "mixed_feedback"]
 MODELS = {
     "GPT": "gpt-4o-2024-11-20",
     "Claude": "claude-3-5-sonnet-20241022",
-    "Gemini": "gemini-1.5-pro",
+    "Deepseek": "deepseek-r1-250528",
     "GLM": "glm-4-plus",
     "Qwen": "qwen2.5-72b-instruct"
 }
 
 
 def setup_logging(dataset, module_name, version=None, feedback=None, function=None):
-    """通用日志设置函数
-    
+    """General logging setup function.
+
     Args:
-        dataset: 数据集名称
-        module_name: 模块名称 (evaluate/feedback)
-        version: 模型版本 (可选，用于evaluate)
-        feedback: 反馈类型 (可选，用于evaluate)  
-        function: 功能名称 (可选，用于evaluate)
+        dataset: Dataset name
+        module_name: Module name (evaluate/feedback)
+        version: Model version (optional, for evaluate)
+        feedback: Feedback type (optional, for evaluate)
+        function: Function name (optional, for evaluate)
     """
-    # 根据模块名称决定日志路径
+    # Determine log directory based on module name
     if module_name == 'feedback':
         log_dir = f"logs/{dataset}/feedback"
-    else:  # evaluate或其他模块
+    else:  # evaluate or other modules
         log_dir = f"logs/{dataset}/{function}/{version}/{feedback}"
     
     os.makedirs(log_dir, exist_ok=True)
@@ -39,7 +39,6 @@ def setup_logging(dataset, module_name, version=None, feedback=None, function=No
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_filename = f"{log_dir}/{timestamp}.log"
 
-    # 清除现有handlers避免重复
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
 

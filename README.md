@@ -21,16 +21,20 @@ The key components of the benchmark are defined as follows:
 * **Docstring**: A high-level description of the code’s intended functionality.
 * **Context**: Supplementary information about the project or surrounding code environment, such as related APIs, class
   definitions, or global variables.
-* **Test Feedback**: This feedback explicitly identifies failing tests and expected outcomes,
-  providing clear, actionable guidance for code correction.
 * **Compiler Feedback**: This feedback highlights syntax errors, code style violations,
   and potential bugs, offering technical insights into structural
   flaws in the code.
-* **LLM Feedback**: This feedback mimics developer-generated suggestions in natural language, pointing out potential logic
-  flaws and recommending
-  best practices to improve code reliability and robustness.
-* **Simple Feedback**: A minimalistic, generic form of feedback
-  (e.g., “The code is wrong. Please fix it.”).
+* **Test Feedback**: This feedback explicitly identifies failing tests and expected outcomes,
+  providing clear, actionable guidance for code correction.
+* **Minimal Feedback**: A fixed, concise message providing no detailed guidance (e.g., “The code
+is wrong. Please fix it.”)
+* **LLM-Skilled Feedback**: Unstructured, natural-language suggestions resembling advice from a
+competent but non-expert reviewer. These feedback messages are informative but may be noisy
+or contain inaccuracies, reflecting real-world human-like guidance
+* **LLM-Expert Feedback**: Unstructured, natural-language suggestions resembling expert reviewers. Feedback is precise, targeted, and closely aligned with the correct solution, providing highquality guidance for repair.
+* **Mixed Feedback**: A composite form that integrates multiple sources, such as structured (Test,
+Compiler) and unstructured (Minimal, LLM-Expert) feedback. This setting emulates realistic debugging environments with heterogeneous guidance, evaluating the LLM’s ability to synthesize
+and prioritize diverse signals.
 
 ## Usage
 
