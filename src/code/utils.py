@@ -5,9 +5,18 @@ import importlib
 import logging
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 
-api_key = ""
-base_url = ""
+def load_env():
+    """Load environment variables from .env file if present."""
+    load_dotenv()
+    api_key = os.getenv("API_KEY")
+    base_url = os.getenv("BASE_URL")
+    return api_key, base_url
+
+api_key, base_url = load_env()
+
+
 FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_skilled_feedback", "llm_expert_feedback", "minimal_feedback", "mixed_feedback"]
 MODELS = {
     "GPT": "gpt-4o-2024-11-20",

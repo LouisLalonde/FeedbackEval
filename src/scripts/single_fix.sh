@@ -1,14 +1,9 @@
 #!/bin/bash
-export PYTHONPATH=$(pwd)/...
+export PYTHONPATH=$(pwd)/../..
 DATASET=("HumanEval")
-FEEDBACK_TYPES=("llm_feedback" "simple_feedback")
-# FEEDBACK_TYPES=("test_feedback" "compiler_feedback")
+FEEDBACK_TYPES=("minimal_feedback")
 declare -A MODELS=(
-#    ["GPT"]="gpt-4o-2024-11-20"
-    # ["Claude"]="claude-3-5-sonnet-20241022"
-    ["GLM"]="glm-4-plus"
-    ["Qwen"]="qwen2.5-72b-instruct"
-    # ["Deepseek"]="deepseek-r1-250528"
+    ["GPT"]="gpt-4o-2024-11-20"
 )
 
 for DATASET in "${DATASET[@]}"; do
@@ -19,7 +14,7 @@ for DATASET in "${DATASET[@]}"; do
 
           echo "Single-round fixing for model $MODEL ($VERSION), feedback $FEEDBACK, dataset $DATASET"
 
-          python src/code/evaluate.py \
+          python ../code/evaluate.py \
               --dataset "$DATASET" \
               --model "$MODEL" \
               --version "$VERSION" \

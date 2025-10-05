@@ -446,9 +446,9 @@ def main():
     )
 
     if args.function == "single_fix":
-        input_path = os.path.join(
-            "dataset", args.dataset, f"{args.dataset}_feedback_test_filtered.jsonl"
-        )
+        input_path = os.path.abspath(os.path.join(
+            "../../dataset", args.dataset, f"{args.dataset}_feedback_test.jsonl"
+        ))
         single_round_fix_code(
             input_path,
             args.model,
@@ -468,13 +468,13 @@ def main():
             args.is_rr,
         )
     elif args.function == "single_score":
-        input_path = os.path.join(
-            "results",
+        input_path = os.path.abspath(os.path.join(
+            "../../results",
             args.model,
             args.dataset,
             "single",
             f"{args.version}_{args.feedback}.jsonl",
-        )
+        ))
         pass_rate_single_round(input_path, args.dataset)
     elif args.function == "multi_fix":
         input_path = os.path.join(
