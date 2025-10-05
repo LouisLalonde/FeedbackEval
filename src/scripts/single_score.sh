@@ -1,6 +1,6 @@
 #!/bin/bash
 export PYTHONPATH=$(pwd)/../..
-DATASET="HumanEval"
+DATASET="CoderEval"
 
 # FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_feedback" "llm_gt_feedback" "simple_feedback" "mixed_feedback")
 FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_skilled_feedback" "minimal_feedback")

@@ -66,12 +66,12 @@ def single_round_fix_code(
                 is_rr=use_rr,
             )
             logger.info(
-                f"Model：{model_name}，Feedback：{feedback}，Task：{ques["_id"]}，prompt: \n{prompt}\n"
+                f"Model：{model_name}，Feedback：{feedback}，Task：{ques['_id']}，prompt: \n{prompt}\n"
             )
             response = get_model_response(model_name, model_version, prompt)
             fixed_code = extract_repaired_code(response)
             logger.info(
-                f"Model：{model_name}，Feedback：{feedback}，Task：{ques["_id"]}，response: \n{response}\n"
+                f"Model：{model_name}，Feedback：{feedback}，Task：{ques['_id']}，response: \n{response}\n"
             )
             fixed_results.append(
                 {

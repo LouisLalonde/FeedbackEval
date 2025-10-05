@@ -92,7 +92,7 @@ dict_std_nonestd = {
 
 
 def run_coder_eval_test(_id, code):
-    f = open("CoderEval4Python.json", "r", encoding="utf-8")
+    f = open(os.path.abspath("../../input/CoderEval4Python.json"), "r", encoding="utf-8")
     content = f.read()
     f.close()
 
@@ -142,6 +142,7 @@ def run_coder_eval_test(_id, code):
                 kk += 1
                 dict_id_file[dictTemp["_id"]] = save_data
 
+    print(dict_id_file)
     content_doc = collection[_id]
     if content_doc is None:
         return

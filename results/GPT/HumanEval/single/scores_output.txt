@@ -1,0 +1,12 @@
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback test_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/GPT/HumanEval/single/gpt-4o-2024-11-20_test_feedback.jsonl
+Score: 78.66, 129/164
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback compiler_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/GPT/HumanEval/single/gpt-4o-2024-11-20_compiler_feedback.jsonl
+Score: 77.44, 127/164
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback llm_skilled_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/GPT/HumanEval/single/gpt-4o-2024-11-20_llm_skilled_feedback.jsonl
+Score: 71.95, 118/164
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback minimal_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/GPT/HumanEval/single/gpt-4o-2024-11-20_minimal_feedback.jsonl
+Score: 79.27, 130/164

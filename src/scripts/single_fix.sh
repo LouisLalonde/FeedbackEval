@@ -1,6 +1,6 @@
 #!/bin/bash
 export PYTHONPATH=$(pwd)/../..
-DATASET=("HumanEval")
+DATASET=("CoderEval")
 FEEDBACK_TYPES=("minimal_feedback")
 declare -A MODELS=(
     ["GPT"]="gpt-4o-2024-11-20"

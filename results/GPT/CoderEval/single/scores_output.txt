@@ -1,0 +1,12 @@
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback test_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/GPT/CoderEval/single/gpt-4o-2024-11-20_test_feedback.jsonl
+Score: 42.08, 93/221
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback compiler_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/GPT/CoderEval/single/gpt-4o-2024-11-20_compiler_feedback.jsonl
+Score: 30.77, 68/221
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback llm_skilled_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/GPT/CoderEval/single/gpt-4o-2024-11-20_llm_skilled_feedback.jsonl
+Score: 28.51, 63/221
+Calculating single-round scores for model GPT (gpt-4o-2024-11-20), feedback minimal_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/GPT/CoderEval/single/gpt-4o-2024-11-20_minimal_feedback.jsonl
+Score: 35.75, 79/221
