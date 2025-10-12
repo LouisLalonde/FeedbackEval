@@ -1,0 +1,21 @@
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback_baseline, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback_baseline.jsonl
+Score: 49.47, 47/95
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback_cot, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback_cot.jsonl
+Score: 53.68, 51/95
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback_no_persona, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback_no_persona.jsonl
+Score: 52.63, 50/95
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback_few_shot, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback_few_shot.jsonl
+Score: 48.42, 46/95
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback_no_docstring, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback_no_docstring.jsonl
+Score: 51.58, 49/95
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback_no_context, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback_no_context.jsonl
+Score: 48.42, 46/95
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback_no_guideline, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback_no_guideline.jsonl
+Score: 51.58, 49/95

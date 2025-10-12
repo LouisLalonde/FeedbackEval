@@ -3,9 +3,9 @@ export PYTHONPATH=$(pwd)/../..
 DATASET="CoderEval"
 
 # FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_feedback" "llm_gt_feedback" "simple_feedback" "mixed_feedback")
-FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_skilled_feedback" "minimal_feedback")
+FEEDBACK_TYPES=("test_feedback_baseline" "test_feedback_cot" "test_feedback_no_persona" "test_feedback_few_shot" "test_feedback_no_docstring" "test_feedback_no_context" "test_feedback_no_guideline")
 declare -A MODELS=(
-    ["GPT"]="gpt-4o-2024-11-20"
+    ["Claude"]="claude-3-5-sonnet-20241022"
 )
 
 # declare -A MODELS=(
