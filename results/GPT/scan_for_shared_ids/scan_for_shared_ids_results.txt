@@ -1,0 +1,13 @@
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_per_1_cot_0_shot_0_ins_1_sa_0_sg_0_sbp_0_rr_1.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_per_1_cot_0_shot_0_ins_1_sa_0_sg_1.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_0_persona_1_instr_1.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_persona_1_instr_0.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_persona_0_instr_1.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_per_1_cot_0_shot_0_ins_1_sa_1_sg_0.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_persona_1_cot_0_fewshot_1_instr_1.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_per_1_cot_0_shot_0_ins_1_sa_0_sg_0_sbp_1_rr_0.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_baseline.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_per_0_cot_0_shot_0_ins_1_sa_0_sg_0_sbp_0_rr_0_es_0.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_per_1_cot_0_shot_0_ins_1_sa_0_sg_0_sbp_0_rr_0_es_1.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_1_ctx_1_persona_1_cot_1_instr_1.jsonl
+Tous les ids sont présents dans ./claude-3-5-sonnet-20241022_test_feedback_doc_0_ctx_1_persona_1_instr_1.jsonl

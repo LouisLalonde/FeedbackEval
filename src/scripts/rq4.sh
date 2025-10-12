@@ -11,12 +11,12 @@ BASE_CMD="python ../code/evaluate.py --dataset ${DATASET} --model ${MODEL_NAME} 
 
 experiments=(
     "Baseline (no additional flags)           | "
-    # "Single-round fix without persona         | --no_persona"
-    # "Single-round fix with cot        | --is_cot"
-    # "Single-round fix without docstring       | --no_docstring"
-    # "Single-round fix without context         | --no_context"
-    # "Single-round fix with few-shot        | --is_few_shot"
-    # "Single-round fix without instructions | --no_instructions"
+    "Single-round fix without persona         | --no_persona"
+    "Single-round fix with cot        | --is_cot"
+    "Single-round fix without docstring       | --no_docstring"
+    "Single-round fix without context         | --no_context"
+    "Single-round fix with few-shot        | --is_few_shot"
+    "Single-round fix without instructions | --no_instructions"
     # "Single-round fix with ES-Shot        | --is_es_shot"
     # "Single-round fix with SA            | --is_sa"
     # "Single-round fix with SG_ICL    | --is_sg_icl"
