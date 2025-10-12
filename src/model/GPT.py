@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from openai import OpenAI
 from tenacity import retry, wait_random_exponential, stop_after_attempt
-from src.code.utils import api_key, base_url
+from src.code.utils import api_key
 
 
 class GPT:

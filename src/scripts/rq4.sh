@@ -1,13 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-export PYTHONPATH=$(pwd)/...
+export PYTHONPATH=$(pwd)/../..
 MODEL_NAME="Claude"
 MODEL_VERSION="claude-3-5-sonnet-20241022"
 FEEDBACK="test_feedback"
 DATASET="CoderEval"
 
-BASE_CMD="python src/code/evaluate.py --dataset ${DATASET} --model ${MODEL_NAME} --version ${MODEL_VERSION} --feedback ${FEEDBACK} --function single_fix"
+BASE_CMD="python ../code/evaluate.py --dataset ${DATASET} --model ${MODEL_NAME} --version ${MODEL_VERSION} --feedback ${FEEDBACK} --function single_fix"
 
 experiments=(
     "Baseline (no additional flags)           | "

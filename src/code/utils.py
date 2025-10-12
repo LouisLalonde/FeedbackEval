@@ -39,9 +39,9 @@ def setup_logging(dataset, module_name, version=None, feedback=None, function=No
     """
     # Determine log directory based on module name
     if module_name == 'feedback':
-        log_dir = f"logs/{dataset}/feedback"
+        log_dir = f"../../logs/{dataset}/feedback"
     else:  # evaluate or other modules
-        log_dir = f"logs/{dataset}/{function}/{version}/{feedback}"
+        log_dir = f"../../logs/{dataset}/{function}/{version}/{feedback}"
     
     os.makedirs(log_dir, exist_ok=True)
     
