@@ -136,8 +136,8 @@ bars1 = plt.bar([i - bar_width/2 for i in x], [mean_human], width=bar_width, lab
 bars2 = plt.bar([i + bar_width/2 for i in x], [mean_coder], width=bar_width, label="CoderEval", alpha=0.85)
 
 plt.xticks(x, labels)
-plt.ylabel("Score moyen (%)")
-plt.title("Comparaison globale GPT-4o (HumanEval vs CoderEval)", fontsize=13, weight="bold")
+plt.ylabel("Repair@1 (%)")
+#plt.title("Comparaison globale GPT-4o (HumanEval vs CoderEval)", fontsize=13, weight="bold")
 plt.legend()
 plt.grid(axis='y', linestyle='--', alpha=0.6)
 
