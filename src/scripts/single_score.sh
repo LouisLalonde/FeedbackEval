@@ -1,9 +1,11 @@
 #!/bin/bash
 export PYTHONPATH=$(pwd)/../..
-DATASET="CoderEval"
+DATASETS=("HumanEval" "CoderEval")
 
 # FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_feedback" "llm_gt_feedback" "simple_feedback" "mixed_feedback")
-FEEDBACK_TYPES=("test_feedback_baseline" "test_feedback_cot" "test_feedback_no_persona" "test_feedback_few_shot" "test_feedback_no_docstring" "test_feedback_no_context" "test_feedback_no_guideline")
+# FEEDBACK_TYPES=("test_feedback_baseline" "test_feedback_cot" "test_feedback_no_persona" "test_feedback_few_shot" "test_feedback_no_docstring" "test_feedback_no_context" "test_feedback_no_guideline")
+FEEDBACK_TYPES=("compiler_feedback" "llm_skilled_feedback" "test_feedback" "minimal_feedback")
+
 declare -A MODELS=(
     ["Claude"]="claude-3-5-sonnet-20241022"
 )
@@ -16,18 +18,20 @@ declare -A MODELS=(
     # ["Deepseek"]="deepseek-r1-250528"
 # )
 
-for MODEL in "${!MODELS[@]}"; do
-    VERSION="${MODELS[$MODEL]}"
+for DATASET in "${DATASET[@]}"; do
+    for MODEL in "${!MODELS[@]}"; do
+        VERSION="${MODELS[$MODEL]}"
 
-    for FEEDBACK in "${FEEDBACK_TYPES[@]}"; do
+        for FEEDBACK in "${FEEDBACK_TYPES[@]}"; do
 
-        echo "Calculating single-round scores for model $MODEL ($VERSION), feedback $FEEDBACK, dataset $DATASET"
+            echo "Calculating single-round scores for model $MODEL ($VERSION), feedback $FEEDBACK, dataset $DATASET"
 
-        python ../code/evaluate.py \
-            --dataset "$DATASET" \
-            --model "$MODEL" \
-            --version "$VERSION" \
-            --feedback "$FEEDBACK" \
-            --function "single_score"
+            python ../code/evaluate.py \
+                --dataset "$DATASET" \
+                --model "$MODEL" \
+                --version "$VERSION" \
+                --feedback "$FEEDBACK" \
+                --function "single_score"
+        done
     done
 done

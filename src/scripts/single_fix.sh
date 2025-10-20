@@ -1,9 +1,9 @@
 #!/bin/bash
 export PYTHONPATH=$(pwd)/../..
 DATASET=("CoderEval")
-FEEDBACK_TYPES=("minimal_feedback")
+FEEDBACK_TYPES=("compiler_feedback" "llm_skilled_feedback" "test_feedback" "minimal_feedback")
 declare -A MODELS=(
-    ["GPT"]="gpt-4o-2024-11-20"
+    ["Claude"]="claude-3-5-sonnet-20241022"
 )
 
 for DATASET in "${DATASET[@]}"; do
