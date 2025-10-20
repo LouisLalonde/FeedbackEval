@@ -1,0 +1,12 @@
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback compiler_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/Claude/HumanEval/single/claude-3-5-sonnet-20241022_compiler_feedback.jsonl
+Score: 79.88, 131/164
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback llm_skilled_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/Claude/HumanEval/single/claude-3-5-sonnet-20241022_llm_skilled_feedback.jsonl
+Score: 76.83, 126/164
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/Claude/HumanEval/single/claude-3-5-sonnet-20241022_test_feedback.jsonl
+Score: 86.59, 142/164
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback minimal_feedback, dataset HumanEval
+Calculating score for /home/louis/Documents/polymtl/log6306/study-replication/FeedbackEval/results/Claude/HumanEval/single/claude-3-5-sonnet-20241022_minimal_feedback.jsonl
+Score: 82.32, 135/164

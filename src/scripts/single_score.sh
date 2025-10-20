@@ -1,24 +1,14 @@
 #!/bin/bash
 export PYTHONPATH=$(pwd)/../..
-DATASETS=("HumanEval" "CoderEval")
+DATASETS=("HumanEval")
 
-# FEEDBACK_TYPES=("test_feedback" "compiler_feedback" "llm_feedback" "llm_gt_feedback" "simple_feedback" "mixed_feedback")
-# FEEDBACK_TYPES=("test_feedback_baseline" "test_feedback_cot" "test_feedback_no_persona" "test_feedback_few_shot" "test_feedback_no_docstring" "test_feedback_no_context" "test_feedback_no_guideline")
 FEEDBACK_TYPES=("compiler_feedback" "llm_skilled_feedback" "test_feedback" "minimal_feedback")
 
 declare -A MODELS=(
     ["Claude"]="claude-3-5-sonnet-20241022"
 )
 
-# declare -A MODELS=(
-    # ["GPT"]="gpt-4o-2024-11-20"
-    # ["Claude"]="claude-3-5-sonnet-20241022"
-    # ["GLM"]="glm-4-plus"
-    # ["Qwen"]="qwen2.5-72b-instruct"
-    # ["Deepseek"]="deepseek-r1-250528"
-# )
-
-for DATASET in "${DATASET[@]}"; do
+for DATASET in "${DATASETS[@]}"; do
     for MODEL in "${!MODELS[@]}"; do
         VERSION="${MODELS[$MODEL]}"
 
