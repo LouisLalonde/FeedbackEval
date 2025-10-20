@@ -1,0 +1,12 @@
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback compiler_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_compiler_feedback.jsonl
+Score: 31.94, 69/216
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback llm_skilled_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_llm_skilled_feedback.jsonl
+Score: 35.19, 76/216
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback test_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_test_feedback.jsonl
+Score: 46.54, 101/217
+Calculating single-round scores for model Claude (claude-3-5-sonnet-20241022), feedback minimal_feedback, dataset CoderEval
+Calculating score for /home/travis/builds/FeedbackEval/results/Claude/CoderEval/single/claude-3-5-sonnet-20241022_minimal_feedback.jsonl
+Score: 42.59, 92/216
