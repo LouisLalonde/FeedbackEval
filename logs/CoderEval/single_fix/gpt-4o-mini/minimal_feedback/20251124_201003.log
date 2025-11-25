@@ -1,0 +1,847 @@
+2025-11-24 20:10:03,742 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b86aa3b4d922cb0e688d36，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+def _validate_labels(labels):
+    """Check that keys and values in the given labels match against their corresponding
+    regular expressions.
+
+    Args:
+        labels (dict): the different labels to validate.
+
+    Raises:
+        ValidationError: if any of the keys and labels does not match their respective
+            regular expression. The error contains as message the list of all errors
+            which occurred in the labels. Each element of the list is a dictionary with
+            one key-value pair:
+            - key: the label key or label value for which an error occurred as string.
+            - value: the error message.
+
+            .. code:: python
+
+                # Example:
+                labels = {
+                    "key1": "valid",
+                    "key2": ["invalid"],
+                    "$$": "invalid",
+                    True: True,
+                }
+                try:
+                    _validate_labels(labels)
+                except ValidationError as err:
+                    assert err.messages == [
+                        {"['invalid']": 'expected string or bytes-like object'},
+                        {'$$': "Label key '$$' does not match the regex [...]"},
+                        {'True': 'expected string or bytes-like object'},
+                        {'True': 'expected string or bytes-like object'},
+                    ]
+    """
+    errors = []
+    while True:
+        try:
+            validate_key(key)
+        except (ValidationError, TypeError) as err:
+            errors.append({str(key): str(err)})
+        try:
+            validate_value(value)
+        except (ValidationError, TypeError) as err:
+            errors.append({str(value): str(err)})
+    if errors:
+        raise ValidationError(list(errors))
+
+
+@@Docstring
+Check that keys and values in the given labels match against their corresponding
+regular expressions.
+
+Args:
+    labels (dict): the different labels to validate.
+
+Raises:
+    ValidationError: if any of the keys and labels does not match their respective
+        regular expression. The error contains as message the list of all errors
+        which occurred in the labels. Each element of the list is a dictionary with
+        one key-value pair:
+        - key: the label key or label value for which an error occurred as string.
+        - value: the error message.
+
+        .. code:: python
+
+            # Example:
+            labels = {
+                "key1": "valid",
+                "key2": ["invalid"],
+                "$$": "invalid",
+                True: True,
+            }
+            try:
+                _validate_labels(labels)
+            except ValidationError as err:
+                assert err.messages == [
+                    {"['invalid']": 'expected string or bytes-like object'},
+                    {'$$': "Label key '$$' does not match the regex [...]"},
+                    {'True': 'expected string or bytes-like object'},
+                    {'True': 'expected string or bytes-like object'},
+                ]
+
+@@Oracle Context
+{ "apis" : "['validate_value', 'str', 'list', 'items', 'validate_key', 'append']", "classes" : "['ValidationError']", "vars" : "[]" }
+
+@@Feedback
+None
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-24 20:10:15,312 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-24 20:10:15,330 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b86aa3b4d922cb0e688d36，response: 
+<repaired_code>
+def _validate_labels(labels):
+    """Check that keys and values in the given labels match against their corresponding
+    regular expressions.
+
+    Args:
+        labels (dict): the different labels to validate.
+
+    Raises:
+        ValidationError: if any of the keys and labels does not match their respective
+            regular expression. The error contains as message the list of all errors
+            which occurred in the labels. Each element of the list is a dictionary with
+            one key-value pair:
+            - key: the label key or label value for which an error occurred as string.
+            - value: the error message.
+
+            .. code:: python
+
+                # Example:
+                labels = {
+                    "key1": "valid",
+                    "key2": ["invalid"],
+                    "$$": "invalid",
+                    True: True,
+                }
+                try:
+                    _validate_labels(labels)
+                except ValidationError as err:
+                    assert err.messages == [
+                        {"['invalid']": 'expected string or bytes-like object'},
+                        {'$$': "Label key '$$' does not match the regex [...]"},
+                        {'True': 'expected string or bytes-like object'},
+                        {'True': 'expected string or bytes-like object'},
+                    ]
+    """
+    errors = []
+    for key, value in labels.items():
+        try:
+            validate_key(key)
+        except (ValidationError, TypeError) as err:
+            errors.append({str(key): str(err)})
+        try:
+            validate_value(value)
+        except (ValidationError, TypeError) as err:
+            errors.append({str(value): str(err)})
+    if errors:
+        raise ValidationError(errors)
+</repaired_code>
+
+2025-11-24 20:10:15,331 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b43425903eeb48555d3ea1，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+def _create_in_regex(self) -> Pattern:
+		"""
+		Create the in-style parameter regular expression.
+
+		Returns the in-style parameter regular expression (:class:`re.Pattern`).
+		"""
+		regex_parts = []
+
+		if self._in_obj.escape_char == "%" and self._out_obj.escape_char == "%":
+			regex_parts.append("(?P<out_percent>%)")
+
+		if self._escape_char:
+			# Escaping is enabled.
+			escape = self._in_obj.escape_regex.format(char=re.escape(self._escape_char))
+			regex_parts.append(escape)
+
+		regex_parts.remove(self._in_obj.param_regex)
+
+		return re.compile("|".join(regex_parts))
+
+@@Docstring
+Create the in-style parameter regular expression.
+
+Returns the in-style parameter regular expression (:class:`re.Pattern`).
+
+@@Oracle Context
+{ "apis" : "['escape', 'format', 'join', 'compile', 'append']", "classes" : "['Pattern']", "vars" : "['Str']" }
+
+@@Feedback
+None
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-24 20:10:20,803 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-24 20:10:20,804 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b43425903eeb48555d3ea1，response: 
+<repaired_code>
+def _create_in_regex(self) -> Pattern:
+		"""
+		Create the in-style parameter regular expression.
+
+		Returns the in-style parameter regular expression (:class:`re.Pattern`).
+		"""
+		regex_parts = []
+
+		if self._in_obj.escape_char == "%" and self._out_obj.escape_char == "%":
+			regex_parts.append("(?P<out_percent>%)")
+
+		if self._escape_char:
+			# Escaping is enabled.
+			escape = self._in_obj.escape_regex.format(char=re.escape(self._escape_char))
+			regex_parts.append(escape)
+
+		# Ensure that the parameter regex is correctly added to the regex_parts
+		regex_parts.append(self._in_obj.param_regex)
+
+		return re.compile("|".join(regex_parts))
+</repaired_code>
+
+2025-11-24 20:10:20,805 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b8d22948ba5a41d1c3f47c，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+def get(self, key, default=None):
+    return self.__dict__.get(key, default)
+
+@@Docstring
+D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.
+
+@@Oracle Context
+{ "apis" : "[]", "classes" : "[]", "vars" : "[]" }
+
+@@Feedback
+None
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-24 20:10:23,175 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-24 20:10:23,188 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b8d22948ba5a41d1c3f47c，response: 
+<repaired_code>
+def get(self, key, default=None):
+    """D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None."""
+    return self.__dict__.get(key, default)
+</repaired_code>
+
+2025-11-24 20:10:23,189 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b45665d7d32e5b55cc8363，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+def make_parsers():
+    """
+    Build a top-level parser and its subparsers and return them as a tuple.
+    """
+    config_paths = collect.get_default_config_paths(expand_home=2)
+    unexpanded_config_paths = collect.get_default_config_paths(expand_home=1)
+    global_parser = ArgumentParser(add_help=1)
+    global_parser.register('action', 'extend', Extend_action)
+    global_group = global_parser.add_argument_group('global arguments')
+    global_group.add_argument('-c', '--config', nargs='*', dest=
+        'config_paths', default=config_paths, help=
+        'Configuration filenames or directories, defaults to: {}'.format(
+        ' '.join(unexpanded_config_paths)))
+    global_group.add_argument('--excludes', dest='excludes_filename', help=
+        'Deprecated in favor of exclude_patterns within configuration')
+    global_group.add_argument('-n', '--dry-run', dest='dry_run', action=
+        'store_true', help=
+        'Go through the motions, but do not actually write to any repositories'
+        )
+    global_group.add_argument('-nc', '--no-color', dest='no_color', action=
+        'store_true', help='Disable colored output')
+    global_group.add_argument('-v', '--verbosity', type=int, choices=range(
+        -2, 4), default=1, help=
+        'Display verbose progress to the console (from only errors to very verbose: -1, 0, 1, or 2)'
+        )
+    global_group.add_argument('--syslog-verbosity', type=int, choices=range
+        (-2, 4), default=1, help=
+        'Log verbose progress to syslog (from only errors to very verbose: -1, 0, 1, or 2). Ignored when console is interactive or --log-file is given'
+        )
+    global_group.add_argument('--log-file-verbosity', type=int, choices=
+        range(-2, 4), default=1, help=
+        'Log verbose progress to log file (from only errors to very verbose: -1, 0, 1, or 2). Only used when --log-file is given'
+        )
+    global_group.add_argument('--monitoring-verbosity', type=int, choices=
+        range(-2, 4), default=1, help=
+        'Log verbose progress to monitoring integrations that support logging (from only errors to very verbose: -1, 0, 1, or 2)'
+        )
+    global_group.add_argument('--log-file', type=str, default=None, help=
+        'Write log messages to this file instead of syslog')
+    global_group.add_argument('--override', metavar='SECTION.OPTION=VALUE',
+        nargs='+', dest='overrides', action='extend', help=
+        'One or more configuration file options to override with specified values'
+        )
+    global_group.add_argument('--no-environment-interpolation', dest=
+        'resolve_env', action='store_false', help=
+        'Do not resolve environment variables in configuration file')
+    global_group.add_argument('--bash-completion', default=1, action=
+        'store_true', help='Show bash completion script and exit')
+    global_group.add_argument('--version', dest='version', default=1,
+        action='store_true', help=
+        'Display installed version number of borgmatic and exit')
+    top_level_parser = ArgumentParser(description=
+        """
+            Simple, configuration-driven backup software for servers and workstations. If none of
+            the action options are given, then borgmatic defaults to: prune, compact, create, and
+            check.
+            """
+        , parents=[global_parser])
+    subparsers = top_level_parser.add_subparsers(title='actions', metavar=
+        '', help=
+        'Specify zero or more actions. Defaults to prune, compact, create, and check. Use --help with action for details:'
+        )
+    init_parser = subparsers.add_parser('init', aliases=SUBPARSER_ALIASES[
+        'init'], help='Initialize an empty Borg repository', description=
+        'Initialize an empty Borg repository', add_help=1)
+    init_group = init_parser.add_argument_group('init arguments')
+    init_group.add_argument('-e', '--encryption', dest='encryption_mode',
+        help='Borg repository encryption mode', required=2)
+    init_group.add_argument('--append-only', dest='append_only', action=
+        'store_true', help='Create an append-only repository')
+    init_group.add_argument('--storage-quota', dest='storage_quota', help=
+        'Create a repository with a fixed storage quota')
+    init_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    prune_parser = subparsers.add_parser('prune', aliases=SUBPARSER_ALIASES
+        ['prune'], help=
+        'Prune archives according to the retention policy (with Borg 1.2+, run compact afterwards to actually free space)'
+        , description=
+        'Prune archives according to the retention policy (with Borg 1.2+, run compact afterwards to actually free space)'
+        , add_help=1)
+    prune_group = prune_parser.add_argument_group('prune arguments')
+    prune_group.add_argument('--stats', dest='stats', default=1, action=
+        'store_true', help='Display statistics of archive')
+    prune_group.add_argument('--files', dest='files', default=1, action=
+        'store_true', help='Show per-file details')
+    prune_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    compact_parser = subparsers.add_parser('compact', aliases=
+        SUBPARSER_ALIASES['compact'], help=
+        'Compact segments to free space (Borg 1.2+ only)', description=
+        'Compact segments to free space (Borg 1.2+ only)', add_help=1)
+    compact_group = compact_parser.add_argument_group('compact arguments')
+    compact_group.add_argument('--progress', dest='progress', default=1,
+        action='store_true', help=
+        'Display progress as each segment is compacted')
+    compact_group.add_argument('--cleanup-commits', dest='cleanup_commits',
+        default=1, action='store_true', help=
+        'Cleanup commit-only 17-byte segment files left behind by Borg 1.1')
+    compact_group.add_argument('--threshold', type=int, dest='threshold',
+        help=
+        'Minimum saved space percentage threshold for compacting a segment, defaults to 10'
+        )
+    compact_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    create_parser = subparsers.add_parser('create', aliases=
+        SUBPARSER_ALIASES['create'], help=
+        'Create archives (actually perform backups)', description=
+        'Create archives (actually perform backups)', add_help=1)
+    create_group = create_parser.add_argument_group('create arguments')
+    create_group.add_argument('--progress', dest='progress', default=1,
+        action='store_true', help=
+        'Display progress for each file as it is backed up')
+    create_group.add_argument('--stats', dest='stats', default=1, action=
+        'store_true', help='Display statistics of archive')
+    create_group.add_argument('--files', dest='files', default=1, action=
+        'store_true', help='Show per-file details')
+    create_group.add_argument('--json', dest='json', default=1, action=
+        'store_true', help='Output results as JSON')
+    create_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    check_parser = subparsers.add_parser('check', aliases=SUBPARSER_ALIASES
+        ['check'], help='Check archives for consistency', description=
+        'Check archives for consistency', add_help=1)
+    check_group = check_parser.add_argument_group('check arguments')
+    check_group.add_argument('--progress', dest='progress', default=1,
+        action='store_true', help=
+        'Display progress for each file as it is checked')
+    check_group.add_argument('--repair', dest='repair', default=1, action=
+        'store_true', help=
+        'Attempt to repair any inconsistencies found (for interactive use)')
+    check_group.add_argument('--only', metavar='CHECK', choices=(
+        'repository', 'archives', 'data', 'extract'), dest='only', action=
+        'append', help=
+        'Run a particular consistency check (repository, archives, data, or extract) instead of configured checks (subject to configured frequency, can specify flag multiple times)'
+        )
+    check_group.add_argument('--force', default=1, action='store_true',
+        help=
+        'Ignore configured check frequencies and run checks unconditionally')
+    check_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    extract_parser = subparsers.add_parser('extract', aliases=
+        SUBPARSER_ALIASES['extract'], help=
+        'Extract files from a named archive to the current directory',
+        description='Extract a named archive to the current directory',
+        add_help=1)
+    extract_group = extract_parser.add_argument_group('extract arguments')
+    extract_group.add_argument('--repository', help=
+        'Path of repository to extract, defaults to the configured repository if there is only one'
+        )
+    extract_group.add_argument('--archive', help=
+        'Name of archive to extract (or "latest")', required=2)
+    extract_group.add_argument('--path', '--restore-path', metavar='PATH',
+        nargs='+', dest='paths', help=
+        'Paths to extract from archive, defaults to the entire archive')
+    extract_group.add_argument('--destination', metavar='PATH', dest=
+        'destination', help=
+        'Directory to extract files into, defaults to the current directory')
+    extract_group.add_argument('--strip-components', type=int, metavar=
+        'NUMBER', dest='strip_components', help=
+        'Number of leading path components to remove from each extracted path. Skip paths with fewer elements'
+        )
+    extract_group.add_argument('--progress', dest='progress', default=1,
+        action='store_true', help=
+        'Display progress for each file as it is extracted')
+    extract_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    export_tar_parser = subparsers.add_parser('export-tar', aliases=
+        SUBPARSER_ALIASES['export-tar'], help=
+        'Export an archive to a tar-formatted file or stream', description=
+        'Export an archive to a tar-formatted file or stream', add_help=1)
+    export_tar_group = export_tar_parser.add_argument_group(
+        'export-tar arguments')
+    export_tar_group.add_argument('--repository', help=
+        'Path of repository to export from, defaults to the configured repository if there is only one'
+        )
+    export_tar_group.add_argument('--archive', help=
+        'Name of archive to export (or "latest")', required=2)
+    export_tar_group.add_argument('--path', metavar='PATH', nargs='+', dest
+        ='paths', help=
+        'Paths to export from archive, defaults to the entire archive')
+    export_tar_group.add_argument('--destination', metavar='PATH', dest=
+        'destination', help=
+        'Path to destination export tar file, or "-" for stdout (but be careful about dirtying output with --verbosity or --files)'
+        , required=2)
+    export_tar_group.add_argument('--tar-filter', help=
+        'Name of filter program to pipe data through')
+    export_tar_group.add_argument('--files', default=1, action='store_true',
+        help='Show per-file details')
+    export_tar_group.add_argument('--strip-components', type=int, metavar=
+        'NUMBER', dest='strip_components', help=
+        'Number of leading path components to remove from each exported path. Skip paths with fewer elements'
+        )
+    export_tar_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    mount_parser = subparsers.add_parser('mount', aliases=SUBPARSER_ALIASES
+        ['mount'], help=
+        'Mount files from a named archive as a FUSE filesystem',
+        description='Mount a named archive as a FUSE filesystem', add_help=1)
+    mount_group = mount_parser.add_argument_group('mount arguments')
+    mount_group.add_argument('--repository', help=
+        'Path of repository to use, defaults to the configured repository if there is only one'
+        )
+    mount_group.add_argument('--archive', help=
+        'Name of archive to mount (or "latest")')
+    mount_group.add_argument('--mount-point', metavar='PATH', dest=
+        'mount_point', help='Path where filesystem is to be mounted',
+        required=2)
+    mount_group.add_argument('--path', metavar='PATH', nargs='+', dest=
+        'paths', help=
+        'Paths to mount from archive, defaults to the entire archive')
+    mount_group.add_argument('--foreground', dest='foreground', default=1,
+        action='store_true', help='Stay in foreground until ctrl-C is pressed')
+    mount_group.add_argument('--options', dest='options', help=
+        'Extra Borg mount options')
+    mount_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    umount_parser = subparsers.add_parser('umount', aliases=
+        SUBPARSER_ALIASES['umount'], help=
+        'Unmount a FUSE filesystem that was mounted with "borgmatic mount"',
+        description='Unmount a mounted FUSE filesystem', add_help=1)
+    umount_group = umount_parser.add_argument_group('umount arguments')
+    umount_group.add_argument('--mount-point', metavar='PATH', dest=
+        'mount_point', help='Path of filesystem to unmount', required=2)
+    umount_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    restore_parser = subparsers.add_parser('restore', aliases=
+        SUBPARSER_ALIASES['restore'], help=
+        'Restore database dumps from a named archive', description=
+        'Restore database dumps from a named archive. (To extract files instead, use "borgmatic extract".)'
+        , add_help=1)
+    restore_group = restore_parser.add_argument_group('restore arguments')
+    restore_group.add_argument('--repository', help=
+        'Path of repository to restore from, defaults to the configured repository if there is only one'
+        )
+    restore_group.add_argument('--archive', help=
+        'Name of archive to restore from (or "latest")', required=2)
+    restore_group.add_argument('--database', metavar='NAME', nargs='+',
+        dest='databases', help=
+        "Names of databases to restore from archive, defaults to all databases. Note that any databases to restore must be defined in borgmatic's configuration"
+        )
+    restore_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    list_parser = subparsers.add_parser('list', aliases=SUBPARSER_ALIASES[
+        'list'], help='List archives', description=
+        'List archives or the contents of an archive', add_help=1)
+    list_group = list_parser.add_argument_group('list arguments')
+    list_group.add_argument('--repository', help=
+        'Path of repository to list, defaults to the configured repositories')
+    list_group.add_argument('--archive', help=
+        'Name of archive to list (or "latest")')
+    list_group.add_argument('--path', metavar='PATH', nargs='+', dest=
+        'paths', help=
+        'Paths or patterns to list from a single selected archive (via "--archive"), defaults to listing the entire archive'
+        )
+    list_group.add_argument('--find', metavar='PATH', nargs='+', dest=
+        'find_paths', help=
+        'Partial paths or patterns to search for and list across multiple archives'
+        )
+    list_group.add_argument('--short', default=1, action='store_true', help
+        ='Output only archive or path names')
+    list_group.add_argument('--format', help='Format for file listing')
+    list_group.add_argument('--json', default=1, action='store_true', help=
+        'Output results as JSON')
+    list_group.add_argument('-P', '--prefix', help=
+        'Only list archive names starting with this prefix')
+    list_group.add_argument('-a', '--glob-archives', metavar='GLOB', help=
+        'Only list archive names matching this glob')
+    list_group.add_argument('--successful', default=2, action='store_true',
+        help=
+        'Deprecated in favor of listing successful (non-checkpoint) backups by default in newer versions of Borg'
+        )
+    list_group.add_argument('--sort-by', metavar='KEYS', help=
+        'Comma-separated list of sorting keys')
+    list_group.add_argument('--first', metavar='N', help=
+        'List first N archives after other filters are applied')
+    list_group.add_argument('--last', metavar='N', help=
+        'List last N archives after other filters are applied')
+    list_group.add_argument('-e', '--exclude', metavar='PATTERN', help=
+        'Exclude paths matching the pattern')
+    list_group.add_argument('--exclude-from', metavar='FILENAME', help=
+        'Exclude paths from exclude file, one per line')
+    list_group.add_argument('--pattern', help=
+        'Include or exclude paths matching a pattern')
+    list_group.add_argument('--patterns-from', metavar='FILENAME', help=
+        'Include or exclude paths matching patterns from pattern file, one per line'
+        )
+    list_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    info_parser = subparsers.add_parser('info', aliases=SUBPARSER_ALIASES[
+        'info'], help='Display summary information on archives',
+        description='Display summary information on archives', add_help=1)
+    info_group = info_parser.add_argument_group('info arguments')
+    info_group.add_argument('--repository', help=
+        'Path of repository to show info for, defaults to the configured repository if there is only one'
+        )
+    info_group.add_argument('--archive', help=
+        'Name of archive to show info for (or "latest")')
+    info_group.add_argument('--json', dest='json', default=1, action=
+        'store_true', help='Output results as JSON')
+    info_group.add_argument('-P', '--prefix', help=
+        'Only show info for archive names starting with this prefix')
+    info_group.add_argument('-a', '--glob-archives', metavar='GLOB', help=
+        'Only show info for archive names matching this glob')
+    info_group.add_argument('--sort-by', metavar='KEYS', help=
+        'Comma-separated list of sorting keys')
+    info_group.add_argument('--first', metavar='N', help=
+        'Show info for first N archives after other filters are applied')
+    info_group.add_argument('--last', metavar='N', help=
+        'Show info for last N archives after other filters are applied')
+    info_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    borg_parser = subparsers.add_parser('borg', aliases=SUBPARSER_ALIASES[
+        'borg'], help='Run an arbitrary Borg command', description=
+        "Run an arbitrary Borg command based on borgmatic's configuration",
+        add_help=1)
+    borg_group = borg_parser.add_argument_group('borg arguments')
+    borg_group.add_argument('--repository', help=
+        'Path of repository to pass to Borg, defaults to the configured repositories'
+        )
+    borg_group.add_argument('--archive', help=
+        'Name of archive to pass to Borg (or "latest")')
+    borg_group.add_argument('--', metavar='OPTION', dest='options', nargs=
+        '+', help=
+        'Options to pass to Borg, command first ("create", "list", etc). "--" is optional. To specify the repository or the archive, you must use --repository or --archive instead of providing them here.'
+        )
+    borg_group.add_argument('-h', '--help', action='help', help=
+        'Show this help message and exit')
+    return top_level_parser, subparsers
+
+
+@@Docstring
+Build a top-level parser and its subparsers and return them as a tuple.
+
+@@Oracle Context
+{ "apis" : "['format', 'register', 'add_parser', 'add_argument_group', 'get_default_config_paths', 'range', 'join', 'add_argument', 'add_subparsers']", "classes" : "['Extend_action', 'ArgumentParser', 'collect']", "vars" : "['Str']" }
+
+@@Feedback
+None
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-24 20:12:00,790 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-24 20:12:00,792 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b45665d7d32e5b55cc8363，response: 
+<repaired_code>
+```python
+def make_parsers():
+    """
+    Build a top-level parser and its subparsers and return them as a tuple.
+    """
+    config_paths = collect.get_default_config_paths(expand_home=2)
+    unexpanded_config_paths = collect.get_default_config_paths(expand_home=1)
+    global_parser = ArgumentParser(add_help=True)
+    global_parser.register('action', 'extend', Extend_action)
+    global_group = global_parser.add_argument_group('global arguments')
+    global_group.add_argument('-c', '--config', nargs='*', dest='config_paths', default=config_paths, help='Configuration filenames or directories, defaults to: {}'.format(' '.join(unexpanded_config_paths)))
+    global_group.add_argument('--excludes', dest='excludes_filename', help='Deprecated in favor of exclude_patterns within configuration')
+    global_group.add_argument('-n', '--dry-run', dest='dry_run', action='store_true', help='Go through the motions, but do not actually write to any repositories')
+    global_group.add_argument('-nc', '--no-color', dest='no_color', action='store_true', help='Disable colored output')
+    global_group.add_argument('-v', '--verbosity', type=int, choices=list(range(-2, 4)), default=1, help='Display verbose progress to the console (from only errors to very verbose: -1, 0, 1, or 2)')
+    global_group.add_argument('--syslog-verbosity', type=int, choices=list(range(-2, 4)), default=1, help='Log verbose progress to syslog (from only errors to very verbose: -1, 0, 1, or 2). Ignored when console is interactive or --log-file is given')
+    global_group.add_argument('--log-file-verbosity', type=int, choices=list(range(-2, 4)), default=1, help='Log verbose progress to log file (from only errors to very verbose: -1, 0, 1, or 2). Only used when --log-file is given')
+    global_group.add_argument('--monitoring-verbosity', type=int, choices=list(range(-2, 4)), default=1, help='Log verbose progress to monitoring integrations that support logging (from only errors to very verbose: -1, 0, 1, or 2)')
+    global_group.add_argument('--log-file', type=str, default=None, help='Write log messages to this file instead of syslog')
+    global_group.add_argument('--override', metavar='SECTION.OPTION=VALUE', nargs='+', dest='overrides', action='extend', help='One or more configuration file options to override with specified values')
+    global_group.add_argument('--no-environment-interpolation', dest='resolve_env', action='store_false', help='Do not resolve environment variables in configuration file')
+    global_group.add_argument('--bash-completion', action='store_true', help='Show bash completion script and exit')
+    global_group.add_argument('--version', dest='version', action='store_true', help='Display installed version number of borgmatic and exit')
+    
+    top_level_parser = ArgumentParser(description="""
+            Simple, configuration-driven backup software for servers and workstations. If none of
+            the action options are given, then borgmatic defaults to: prune, compact, create, and
+            check.
+            """, parents=[global_parser])
+    
+    subparsers = top_level_parser.add_subparsers(title='actions', metavar='', help='Specify zero or more actions. Defaults to prune, compact, create, and check. Use --help with action for details:')
+    
+    init_parser = subparsers.add_parser('init', aliases=SUBPARSER_ALIASES['init'], help='Initialize an empty Borg repository', description='Initialize an empty Borg repository', add_help=True)
+    init_group = init_parser.add_argument_group('init arguments')
+    init_group.add_argument('-e', '--encryption', dest='encryption_mode', help='Borg repository encryption mode', required=True)
+    init_group.add_argument('--append-only', dest='append_only', action='store_true', help='Create an append-only repository')
+    init_group.add_argument('--storage-quota', dest='storage_quota', help='Create a repository with a fixed storage quota')
+    init_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    prune_parser = subparsers.add_parser('prune', aliases=SUBPARSER_ALIASES['prune'], help='Prune archives according to the retention policy (with Borg 1.2+, run compact afterwards to actually free space)', description='Prune archives according to the retention policy (with Borg 1.2+, run compact afterwards to actually free space)', add_help=True)
+    prune_group = prune_parser.add_argument_group('prune arguments')
+    prune_group.add_argument('--stats', dest='stats', action='store_true', help='Display statistics of archive')
+    prune_group.add_argument('--files', dest='files', action='store_true', help='Show per-file details')
+    prune_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    compact_parser = subparsers.add_parser('compact', aliases=SUBPARSER_ALIASES['compact'], help='Compact segments to free space (Borg 1.2+ only)', description='Compact segments to free space (Borg 1.2+ only)', add_help=True)
+    compact_group = compact_parser.add_argument_group('compact arguments')
+    compact_group.add_argument('--progress', dest='progress', action='store_true', help='Display progress as each segment is compacted')
+    compact_group.add_argument('--cleanup-commits', dest='cleanup_commits', action='store_true', help='Cleanup commit-only 17-byte segment files left behind by Borg 1.1')
+    compact_group.add_argument('--threshold', type=int, dest='threshold', help='Minimum saved space percentage threshold for compacting a segment, defaults to 10')
+    compact_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    create_parser = subparsers.add_parser('create', aliases=SUBPARSER_ALIASES['create'], help='Create archives (actually perform backups)', description='Create archives (actually perform backups)', add_help=True)
+    create_group = create_parser.add_argument_group('create arguments')
+    create_group.add_argument('--progress', dest='progress', action='store_true', help='Display progress for each file as it is backed up')
+    create_group.add_argument('--stats', dest='stats', action='store_true', help='Display statistics of archive')
+    create_group.add_argument('--files', dest='files', action='store_true', help='Show per-file details')
+    create_group.add_argument('--json', dest='json', action='store_true', help='Output results as JSON')
+    create_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    check_parser = subparsers.add_parser('check', aliases=SUBPARSER_ALIASES['check'], help='Check archives for consistency', description='Check archives for consistency', add_help=True)
+    check_group = check_parser.add_argument_group('check arguments')
+    check_group.add_argument('--progress', dest='progress', action='store_true', help='Display progress for each file as it is checked')
+    check_group.add_argument('--repair', dest='repair', action='store_true', help='Attempt to repair any inconsistencies found (for interactive use)')
+    check_group.add_argument('--only', metavar='CHECK', choices=('repository', 'archives', 'data', 'extract'), dest='only', action='append', help='Run a particular consistency check (repository, archives, data, or extract) instead of configured checks (subject to configured frequency, can specify flag multiple times)')
+    check_group.add_argument('--force', action='store_true', help='Ignore configured check frequencies and run checks unconditionally')
+    check_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    extract_parser = subparsers.add_parser('extract', aliases=SUBPARSER_ALIASES['extract'], help='Extract files from a named archive to the current directory', description='Extract a named archive to the current directory', add_help=True)
+    extract_group = extract_parser.add_argument_group('extract arguments')
+    extract_group.add_argument('--repository', help='Path of repository to extract, defaults to the configured repository if there is only one')
+    extract_group.add_argument('--archive', help='Name of archive to extract (or "latest")', required=True)
+    extract_group.add_argument('--path', '--restore-path', metavar='PATH', nargs='+', dest='paths', help='Paths to extract from archive, defaults to the entire archive')
+    extract_group.add_argument('--destination', metavar='PATH', dest='destination', help='Directory to extract files into, defaults to the current directory')
+    extract_group.add_argument('--strip-components', type=int, metavar='NUMBER', dest='strip_components', help='Number of leading path components to remove from each extracted path. Skip paths with fewer elements')
+    extract_group.add_argument('--progress', dest='progress', action='store_true', help='Display progress for each file as it is extracted')
+    extract_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    export_tar_parser = subparsers.add_parser('export-tar', aliases=SUBPARSER_ALIASES['export-tar'], help='Export an archive to a tar-formatted file or stream', description='Export an archive to a tar-formatted file or stream', add_help=True)
+    export_tar_group = export_tar_parser.add_argument_group('export-tar arguments')
+    export_tar_group.add_argument('--repository', help='Path of repository to export from, defaults to the configured repository if there is only one')
+    export_tar_group.add_argument('--archive', help='Name of archive to export (or "latest")', required=True)
+    export_tar_group.add_argument('--path', metavar='PATH', nargs='+', dest='paths', help='Paths to export from archive, defaults to the entire archive')
+    export_tar_group.add_argument('--destination', metavar='PATH', dest='destination', help='Path to destination export tar file, or "-" for stdout (but be careful about dirtying output with --verbosity or --files)', required=True)
+    export_tar_group.add_argument('--tar-filter', help='Name of filter program to pipe data through')
+    export_tar_group.add_argument('--files', action='store_true', help='Show per-file details')
+    export_tar_group.add_argument('--strip-components', type=int, metavar='NUMBER', dest='strip_components', help='Number of leading path components to remove from each exported path. Skip paths with fewer elements')
+    export_tar_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    mount_parser = subparsers.add_parser('mount', aliases=SUBPARSER_ALIASES['mount'], help='Mount files from a named archive as a FUSE filesystem', description='Mount a named archive as a FUSE filesystem', add_help=True)
+    mount_group = mount_parser.add_argument_group('mount arguments')
+    mount_group.add_argument('--repository', help='Path of repository to use, defaults to the configured repository if there is only one')
+    mount_group.add_argument('--archive', help='Name of archive to mount (or "latest")')
+    mount_group.add_argument('--mount-point', metavar='PATH', dest='mount_point', help='Path where filesystem is to be mounted', required=True)
+    mount_group.add_argument('--path', metavar='PATH', nargs='+', dest='paths', help='Paths to mount from archive, defaults to the entire archive')
+    mount_group.add_argument('--foreground', dest='foreground', action='store_true', help='Stay in foreground until ctrl-C is pressed')
+    mount_group.add_argument('--options', dest='options', help='Extra Borg mount options')
+    mount_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    umount_parser = subparsers.add_parser('umount', aliases=SUBPARSER_ALIASES['umount'], help='Unmount a FUSE filesystem that was mounted with "borgmatic mount"', description='Unmount a mounted FUSE filesystem', add_help=True)
+    umount_group = umount_parser.add_argument_group('umount arguments')
+    umount_group.add_argument('--mount-point', metavar='PATH', dest='mount_point', help='Path of filesystem to unmount', required=True)
+    umount_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    restore_parser = subparsers.add_parser('restore', aliases=SUBPARSER_ALIASES['restore'], help='Restore database dumps from a named archive', description='Restore database dumps from a named archive. (To extract files instead, use "borgmatic extract".)', add_help=True)
+    restore_group = restore_parser.add_argument_group('restore arguments')
+    restore_group.add_argument('--repository', help='Path of repository to restore from, defaults to the configured repository if there is only one')
+    restore_group.add_argument('--archive', help='Name of archive to restore from (or "latest")', required=True)
+    restore_group.add_argument('--database', metavar='NAME', nargs='+', dest='databases', help="Names of databases to restore from archive, defaults to all databases. Note that any databases to restore must be defined in borgmatic's configuration")
+    restore_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    list_parser = subparsers.add_parser('list', aliases=SUBPARSER_ALIASES['list'], help='List archives', description='List archives or the contents of an archive', add_help=True)
+    list_group = list_parser.add_argument_group('list arguments')
+    list_group.add_argument('--repository', help='Path of repository to list, defaults to the configured repositories')
+    list_group.add_argument('--archive', help='Name of archive to list (or "latest")')
+    list_group.add_argument('--path', metavar='PATH', nargs='+', dest='paths', help='Paths or patterns to list from a single selected archive (via "--archive"), defaults to listing the entire archive')
+    list_group.add_argument('--find', metavar='PATH', nargs='+', dest='find_paths', help='Partial paths or patterns to search for and list across multiple archives')
+    list_group.add_argument('--short', action='store_true', help='Output only archive or path names')
+    list_group.add_argument('--format', help='Format for file listing')
+    list_group.add_argument('--json', dest='json', action='store_true', help='Output results as JSON')
+    list_group.add_argument('-P', '--prefix', help='Only list archive names starting with this prefix')
+    list_group.add_argument('-a', '--glob-archives', metavar='GLOB', help='Only list archive names matching this glob')
+    list_group.add_argument('--successful', action='store_true', help='Deprecated in favor of listing successful (non-checkpoint) backups by default in newer versions of Borg')
+    list_group.add_argument('--sort-by', metavar='KEYS', help='Comma-separated list of sorting keys')
+    list_group.add_argument('--first', metavar='N', help='List first N archives after other filters are applied')
+    list_group.add_argument('--last', metavar='N', help='List last N archives after other filters are applied')
+    list_group.add_argument('-e', '--exclude', metavar='PATTERN', help='Exclude paths matching the pattern')
+    list_group.add_argument('--exclude-from', metavar='FILENAME', help='Exclude paths from exclude file, one per line')
+    list_group.add_argument('--pattern', help='Include or exclude paths matching a pattern')
+    list_group.add_argument('--patterns-from', metavar='FILENAME', help='Include or exclude paths matching patterns from pattern file, one per line')
+    list_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    info_parser = subparsers.add_parser('info', aliases=SUBPARSER_ALIASES['info'], help='Display summary information on archives', description='Display summary information on archives', add_help=True)
+    info_group = info_parser.add_argument_group('info arguments')
+    info_group.add_argument('--repository', help='Path of repository to show info for, defaults to the configured repository if there is only one')
+    info_group.add_argument('--archive', help='Name of archive to show info for (or "latest")')
+    info_group.add_argument('--json', dest='json', action='store_true', help='Output results as JSON')
+    info_group.add_argument('-P', '--prefix', help='Only show info for archive names starting with this prefix')
+    info_group.add_argument('-a', '--glob-archives', metavar='GLOB', help='Only show info for archive names matching this glob')
+    info_group.add_argument('--sort-by', metavar='KEYS', help='Comma-separated list of sorting keys')
+    info_group.add_argument('--first', metavar='N', help='Show info for first N archives after other filters are applied')
+    info_group.add_argument('--last', metavar='N', help='Show info for last N archives after other filters are applied')
+    info_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    borg_parser = subparsers.add_parser('borg', aliases=SUBPARSER_ALIASES['borg'], help='Run an arbitrary Borg command', description="Run an arbitrary Borg command based on borgmatic's configuration", add_help=True)
+    borg_group = borg_parser.add_argument_group('borg arguments')
+    borg_group.add_argument('--repository', help='Path of repository to pass to Borg, defaults to the configured repositories')
+    borg_group.add_argument('--archive', help='Name of archive to pass to Borg (or "latest")')
+    borg_group.add_argument('--', metavar='OPTION', dest='options', nargs='+', help='Options to pass to Borg, command first ("create", "list", etc). "--" is optional. To specify the repository or the archive, you must use --repository or --archive instead of providing them here.')
+    borg_group.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    
+    return top_level_parser, subparsers
+```
+</repaired_code>
+
+2025-11-24 20:12:00,792 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b8d23c48ba5a41d1c3f49b，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+def popitem(self):
+    """
+    Remove and return the (key, value) pair most recently used.
+    """
+    if self:
+        key = next(reversed(self))
+        value = self.pop(key)
+        return key, value
+    else:
+        raise KeyError('popitem(): dictionary is empty')
+
+@@Docstring
+Remove and return the `(key, value)` pair most recently used.
+
+@@Oracle Context
+{ "apis" : "['iter', 'type', 'pop', 'next']", "classes" : "['KeyError']", "vars" : "[]" }
+
+@@Feedback
+None
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-24 20:12:04,661 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-24 20:12:04,662 - evaluate - INFO - Model：GPT，Feedback：minimal_feedback，Task：62b8d23c48ba5a41d1c3f49b，response: 
+<repaired_code>
+def popitem(self):
+    """
+    Remove and return the (key, value) pair most recently used.
+    """
+    if self:  # Check if the dictionary is not empty
+        key = next(reversed(self))  # Get the most recently used key
+        value = self.pop(key)  # Remove the key and get its value
+        return key, value  # Return the key-value pair
+    else:
+        raise KeyError('popitem(): dictionary is empty')  # Raise error if empty
+</repaired_code>
+

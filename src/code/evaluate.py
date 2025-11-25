@@ -108,11 +108,11 @@ def single_round_fix_code(
     if all([use_docstring, use_context, use_persona, use_instructions]) and not any(
         [use_cot, use_few_shot, use_sa, use_sg_icl, use_sbp, use_rr, use_es_shot]
     ):
-        save_dir = os.path.join("results", model_name, dataset, f"single")
+        save_dir = os.path.join("..", "..", "results", model_name, dataset, f"single")
         os.makedirs(save_dir, exist_ok=True)
         save_path = os.path.join(save_dir, f"{model_version}_{feedback}.jsonl")
     else:
-        save_dir = os.path.join("results/rq4-prompt")
+        save_dir = os.path.join("..", "..", "results", "rq4-prompt")
         os.makedirs(save_dir, exist_ok=True)
         config_suffix = (
             f"doc_{int(use_docstring)}_ctx_{int(use_context)}_"
