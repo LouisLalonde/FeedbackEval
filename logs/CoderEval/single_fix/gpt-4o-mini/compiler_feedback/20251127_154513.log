@@ -1,0 +1,924 @@
+2025-11-27 15:45:13,919 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766821a6d9265ec0174b6，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public static Class<?>[] resolveArguments(Type genericType,Class<?> targetType){
+  Class<?>[] result=null;
+  if (genericType instanceof ParameterizedType) {
+    ParameterizedType paramType=(ParameterizedType)genericType;
+    Type[] arguments=paramType.getActualTypeArguments();
+    result=new Class[arguments.length+1];
+    for (int i=0; i < arguments.length; i++)     result[i]=resolveClass(arguments[i],targetType);
+  }
+ else   if (genericType instanceof TypeVariable) {
+    result=new Class[1];
+    result[0]=resolveClass(genericType,targetType);
+  }
+  return result;
+}
+
+@@Docstring
+/** 
+ * Resolves the arguments for the  {@code genericType} using the type variable information for the{@code targetType}. Returns  {@code null} if {@code genericType} is not parameterized or ifarguments cannot be resolved.
+ */
+
+
+@@Oracle Context
+{ "apis" : "[getActualTypeArguments, resolveClass]", "classes" : "[Class<?>[], ParameterizedType, Type[]]", "vars" : "[length]" }
+
+@@Feedback
+JUnit version 4.13.2
+.E
+Time: 0.011
+There was 1 failure:
+1) testTypeResolverArguments(org.atmosphere.config.managed.TypeResolver_resolveArgumentsTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at org.atmosphere.config.managed.TypeResolver_resolveArgumentsTest.testTypeResolverArguments(TypeResolver_resolveArgumentsTest.java:29)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:19,026 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:19,033 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766821a6d9265ec0174b6，response: 
+<repaired_code>
+public static Class<?>[] resolveArguments(Type genericType, Class<?> targetType) {
+    Class<?>[] result = null;
+    if (genericType instanceof ParameterizedType) {
+        ParameterizedType paramType = (ParameterizedType) genericType;
+        Type[] arguments = paramType.getActualTypeArguments();
+        result = new Class[arguments.length]; // Adjusted to match the number of arguments
+        for (int i = 0; i < arguments.length; i++) {
+            result[i] = resolveClass(arguments[i], targetType);
+        }
+    } else if (genericType instanceof TypeVariable) {
+        result = new Class[1];
+        result[0] = resolveClass(genericType, targetType);
+    }
+    return result; // Returning null if no arguments were resolved is already handled
+}
+</repaired_code>
+
+2025-11-27 15:45:19,033 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766821a6d9265ec0174bf，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public static String capitalize(String name){
+  if (name == null || name.length() == 0) {
+    return name;
+  }
+  name.toCharArray();
+  chars[0]=Character.toUpperCase(chars[0]);
+  return new String(chars);
+}
+
+@@Docstring
+/** 
+ * Reverse of Introspector.decapitalize
+ */
+
+
+@@Oracle Context
+{ "apis" : "[length, toCharArray, toUpperCase]", "classes" : "[]", "vars" : "[]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:163: warning: [removal] Integer(String) in Integer has been deprecated and marked for removal
+                            params[0] = new Integer(value);
+                                        ^
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:171: warning: [removal] Long(String) in Long has been deprecated and marked for removal
+                            params[0] = new Long(value);
+                                        ^
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:179: warning: [removal] Boolean(String) in Boolean has been deprecated and marked for removal
+                        params[0] = new Boolean(value);
+                                    ^
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:379: error: cannot find symbol
+  chars[0]=Character.toUpperCase(chars[0]);
+  ^
+  symbol:   variable chars
+  location: class IntrospectionUtils
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:379: error: cannot find symbol
+  chars[0]=Character.toUpperCase(chars[0]);
+                                 ^
+  symbol:   variable chars
+  location: class IntrospectionUtils
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:380: error: cannot find symbol
+  return new String(chars);
+                    ^
+  symbol:   variable chars
+  location: class IntrospectionUtils
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:822: warning: [removal] Integer(String) in Integer has been deprecated and marked for removal
+                result = new Integer(object);
+                         ^
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java:828: warning: [removal] Boolean(String) in Boolean has been deprecated and marked for removal
+            result = new Boolean(object);
+                     ^
+Note: /home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/IntrospectionUtils.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+3 errors
+5 warnings
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:21,292 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:21,293 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766821a6d9265ec0174bf，response: 
+<repaired_code>
+public static String capitalize(String name){
+  if (name == null || name.length() == 0) {
+    return name;
+  }
+  char[] chars = name.toCharArray(); // Fix: Declare and initialize chars array
+  chars[0] = Character.toUpperCase(chars[0]);
+  return new String(chars);
+}
+</repaired_code>
+
+2025-11-27 15:45:21,294 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766851a6d9265ec01751b，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+private static char decodeHexNibble(final char c){
+  if ('0' <= c && c <= '9') {
+    return (char)(c - '0' +);
+  }
+ else   if ('a' <= c && c <= 'f') {
+    return (char)(c - 'a' + 10);
+  }
+ else   if ('A' <= c && c <= 'F') {
+    return (char)(c - 'A' + 10);
+  }
+ else {
+    return Character.MAX_VALUE;
+  }
+}
+
+@@Docstring
+/** 
+ * Helper to decode half of a hexadecimal number from a string.
+ * @param c The ASCII character of the hexadecimal number to decode.Must be in the range  {@code [0-9a-fA-F]}.
+ * @return The hexadecimal value represented in the ASCII charactergiven, or  {@link Character#MAX_VALUE} if the character is invalid.
+ */
+
+
+@@Oracle Context
+{ "apis" : "[]", "classes" : "[Character]", "vars" : "[MAX_VALUE]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/QueryStringDecoder.java:410: error: illegal start of expression
+    return (char)(c - '0' +);
+                           ^
+1 error
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:24,359 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:24,363 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766851a6d9265ec01751b，response: 
+<repaired_code>
+private static char decodeHexNibble(final char c){
+  if ('0' <= c && c <= '9') {
+    return (char)(c - '0' + 0); // Fixed the expression by adding 0
+  }
+  else if ('a' <= c && c <= 'f') {
+    return (char)(c - 'a' + 10);
+  }
+  else if ('A' <= c && c <= 'F') {
+    return (char)(c - 'A' + 10);
+  }
+  else {
+    return Character.MAX_VALUE;
+  }
+}
+</repaired_code>
+
+2025-11-27 15:45:24,363 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766861a6d9265ec01755a，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public final MatchResult match(CharSequence uri){
+  if (uri == null || uri.length() == 0)   return (regexPattern == null) ? EMPTY_STRING_MATCH_RESULT : null;
+ else   if (regexPattern == null)   return null;
+  m=regexPattern.matcher(uri);
+  if (!m.matches())   return null;
+  return (groupIndexes.length > 0) ? new GroupIndexMatchResult(m) : m;
+}
+
+@@Docstring
+/** 
+ * Match a URI against the pattern.
+ * @param uri the uri to match against the template.
+ * @return the match result, otherwise null if no match occurs.
+ */
+
+
+@@Oracle Context
+{ "apis" : "[length, matcher, matches, GroupIndexMatchResult]", "classes" : "[Matcher, groupIndexes]", "vars" : "[length, regexPattern, EMPTY_STRING_MATCH_RESULT, groupIndexes]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/uri/UriPattern.java:261: error: cannot find symbol
+  m=regexPattern.matcher(uri);
+  ^
+  symbol:   variable m
+  location: class UriPattern
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/uri/UriPattern.java:262: error: cannot find symbol
+  if (!m.matches())   return null;
+       ^
+  symbol:   variable m
+  location: class UriPattern
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/uri/UriPattern.java:263: error: cannot find symbol
+  return (groupIndexes.length > 0) ? new GroupIndexMatchResult(m) : m;
+                                                               ^
+  symbol:   variable m
+  location: class UriPattern
+/home/travis/builds/java/CoderEval-Java-projects/atmosphere/modules/cpr/src/main/java/org/atmosphere/util/uri/UriPattern.java:263: error: cannot find symbol
+  return (groupIndexes.length > 0) ? new GroupIndexMatchResult(m) : m;
+                                                                    ^
+  symbol:   variable m
+  location: class UriPattern
+4 errors
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:27,421 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:27,422 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766861a6d9265ec01755a，response: 
+<repaired_code>
+public final MatchResult match(CharSequence uri) {
+    if (uri == null || uri.length() == 0) {
+        return (regexPattern == null) ? EMPTY_STRING_MATCH_RESULT : null;
+    } else if (regexPattern == null) {
+        return null;
+    }
+    
+    Matcher m = regexPattern.matcher(uri); // Declare 'm' as a Matcher
+    if (!m.matches()) {
+        return null;
+    }
+    
+    return (groupIndexes.length > 0) ? new GroupIndexMatchResult(m) : m;
+}
+</repaired_code>
+
+2025-11-27 15:45:27,422 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766a81a6d9265ec017586，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+private void pop(final int items){
+  if (outputStackTop >= elements) {
+    outputStackTop-=elements;
+  }
+ else {
+    outputStackStart-=elements - outputStackTop;
+    outputStackTop=0;
+  }
+}
+
+
+@@Docstring
+/** 
+ * Pops the given number of abstract types from the output frame stack.
+ * @param elements the number of abstract types that must be popped.
+ */
+
+
+@@Oracle Context
+{ "apis" : "[]", "classes" : "[]", "vars" : "[outputStackTop, outputStackStart]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/fastjson2/core/src/main/java/com/alibaba/fastjson2/internal/asm/Frame.java:632: error: cannot find symbol
+  if (outputStackTop >= elements) {
+                        ^
+  symbol:   variable elements
+  location: class Frame
+/home/travis/builds/java/CoderEval-Java-projects/fastjson2/core/src/main/java/com/alibaba/fastjson2/internal/asm/Frame.java:633: error: cannot find symbol
+    outputStackTop-=elements;
+                    ^
+  symbol:   variable elements
+  location: class Frame
+/home/travis/builds/java/CoderEval-Java-projects/fastjson2/core/src/main/java/com/alibaba/fastjson2/internal/asm/Frame.java:636: error: cannot find symbol
+    outputStackStart-=elements - outputStackTop;
+                      ^
+  symbol:   variable elements
+  location: class Frame
+3 errors
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:28,783 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:28,789 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766a81a6d9265ec017586，response: 
+<repaired_code>
+private void pop(final int items){
+  if (outputStackTop >= items) {
+    outputStackTop -= items;
+  } else {
+    outputStackStart -= items - outputStackTop;
+    outputStackTop = 0;
+  }
+}
+</repaired_code>
+
+2025-11-27 15:45:28,790 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766a91a6d9265ec0175c2，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+private int pop(){
+  if (outputStackTop > 0) {
+    return outputStack[--outputStackTop]
+  }
+ else {
+    return STACK_KIND | -(--outputStackStart);
+  }
+}
+
+@@Docstring
+/** 
+ * Pops an abstract type from the output frame stack and returns its value.
+ * @return the abstract type that has been popped from the output frame stack.
+ */
+
+
+@@Oracle Context
+{ "apis" : "[]", "classes" : "[]", "vars" : "[outputStackTop, outputStack, STACK_KIND, outputStackStart]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/fastjson2/core/src/main/java/com/alibaba/fastjson2/internal/asm/Frame.java:619: error: ';' expected
+    return outputStack[--outputStackTop]
+                                        ^
+1 error
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:30,401 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:30,403 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766a91a6d9265ec0175c2，response: 
+<repaired_code>
+private int pop(){
+  if (outputStackTop > 0) {
+    return outputStack[--outputStackTop]; // Added missing semicolon
+  } else {
+    return STACK_KIND | -(--outputStackStart);
+  }
+}
+</repaired_code>
+
+2025-11-27 15:45:30,403 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f01a6d9265ec01762e，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public static boolean isEmpty(final double[] array){
+  return array == null || array.length = 0;
+}
+
+@@Docstring
+/** 
+ * <p>Checks if an array of primitive doubles is empty or <code>null</code>.</p>
+ * @param array  the array to test
+ * @return <code>true</code> if the array is empty or <code>null</code>
+ * @since 2.1
+ */
+
+
+@@Oracle Context
+{ "apis" : "[]", "classes" : "[]", "vars" : "[length]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2573: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+            result[i] = new Character(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2641: warning: [removal] Long(long) in Long has been deprecated and marked for removal
+            result[i] = new Long(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2709: warning: [removal] Integer(int) in Integer has been deprecated and marked for removal
+            result[i] = new Integer(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2777: warning: [removal] Short(short) in Short has been deprecated and marked for removal
+            result[i] = new Short(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2845: warning: [removal] Byte(byte) in Byte has been deprecated and marked for removal
+            result[i] = new Byte(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2913: warning: [removal] Double(double) in Double has been deprecated and marked for removal
+            result[i] = new Double(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2981: warning: [removal] Float(float) in Float has been deprecated and marked for removal
+            result[i] = new Float(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3122: error: bad operand types for binary operator '||'
+  return array == null || array.length = 0;
+                       ^
+  first type:  boolean
+  second type: int
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3930: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+        return (char[]) ArrayUtils.add(array, index, new Character(element), Character.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3961: warning: [removal] Byte(byte) in Byte has been deprecated and marked for removal
+        return (byte[]) ArrayUtils.add(array, index, new Byte(element), Byte.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3992: warning: [removal] Short(short) in Short has been deprecated and marked for removal
+        return (short[]) ArrayUtils.add(array, index, new Short(element), Short.TYPE);
+                                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4023: warning: [removal] Integer(int) in Integer has been deprecated and marked for removal
+        return (int[]) ArrayUtils.add(array, index, new Integer(element), Integer.TYPE);
+                                                    ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4054: warning: [removal] Long(long) in Long has been deprecated and marked for removal
+        return (long[]) ArrayUtils.add(array, index, new Long(element), Long.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4085: warning: [removal] Float(float) in Float has been deprecated and marked for removal
+        return (float[]) ArrayUtils.add(array, index, new Float(element), Float.TYPE);
+                                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4116: warning: [removal] Double(double) in Double has been deprecated and marked for removal
+        return (double[]) ArrayUtils.add(array, index, new Double(element), Double.TYPE);
+                                                       ^
+Note: /home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+1 error
+14 warnings
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:31,607 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:31,614 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f01a6d9265ec01762e，response: 
+<repaired_code>
+public static boolean isEmpty(final double[] array){
+  return array == null || array.length == 0; // Fixed the assignment operator '=' to equality operator '=='
+}
+</repaired_code>
+
+2025-11-27 15:45:31,614 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f11a6d9265ec017658，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public static int indexOfLastSeparator(String filename){
+  if (filename == null) {
+    return -1;
+  }
+  int lastUnixPos=filename.lastIndexOf(UNIX_SEPARATOR)
+  int lastWindowsPos=filename.lastIndexOf(WINDOWS_SEPARATOR);
+  return Math.max(lastUnixPos,lastWindowsPos);
+}
+
+@@Docstring
+/** 
+ * Returns the index of the last directory separator character. <p> This method will handle a file in either Unix or Windows format. The position of the last forward or backslash is returned. <p> The output will be the same irrespective of the machine that the code is running on.
+ * @param filename  the filename to find the last path separator in, null returns -1
+ * @return the index of the last separator character, or -1 if thereis no such character
+ */
+
+
+@@Oracle Context
+{ "apis" : "[lastIndexOf, max]", "classes" : "[]", "vars" : "[UNIX_SEPARATOR, WINDOWS_SEPARATOR]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/io/FilenameUtils_indexOfLastSeparatorTest.java:9: error: cannot find symbol
+    public void testIndexOfLastSeparator() throws IOException {
+                                                  ^
+  symbol:   class IOException
+  location: class FilenameUtils_indexOfLastSeparatorTest
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/io/FilenameUtils.java:620: error: ';' expected
+  int lastUnixPos=filename.lastIndexOf(UNIX_SEPARATOR)
+                                                      ^
+2 errors
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:35,789 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:35,790 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f11a6d9265ec017658，response: 
+<repaired_code>
+public static int indexOfLastSeparator(String filename){
+  if (filename == null) {
+    return -1;
+  }
+  int lastUnixPos = filename.lastIndexOf(UNIX_SEPARATOR); // Added missing semicolon
+  int lastWindowsPos = filename.lastIndexOf(WINDOWS_SEPARATOR);
+  return Math.max(lastUnixPos, lastWindowsPos);
+}
+</repaired_code>
+
+2025-11-27 15:45:35,791 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f21a6d9265ec01767d，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public static String toString(Object object){
+  return (object == null) ? null : object.toString(
+}
+
+@@Docstring
+/** 
+ * Object to String ,when null object then null else return toString(); 
+ */
+
+
+@@Oracle Context
+{ "apis" : "[]", "classes" : "[]", "vars" : "[]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/StringUtils.java:6135: error: illegal start of expression
+}}
+^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2573: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+            result[i] = new Character(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2641: warning: [removal] Long(long) in Long has been deprecated and marked for removal
+            result[i] = new Long(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2709: warning: [removal] Integer(int) in Integer has been deprecated and marked for removal
+            result[i] = new Integer(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2777: warning: [removal] Short(short) in Short has been deprecated and marked for removal
+            result[i] = new Short(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2845: warning: [removal] Byte(byte) in Byte has been deprecated and marked for removal
+            result[i] = new Byte(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2913: warning: [removal] Double(double) in Double has been deprecated and marked for removal
+            result[i] = new Double(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2981: warning: [removal] Float(float) in Float has been deprecated and marked for removal
+            result[i] = new Float(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3938: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+        return (char[]) ArrayUtils.add(array, index, new Character(element), Character.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3969: warning: [removal] Byte(byte) in Byte has been deprecated and marked for removal
+        return (byte[]) ArrayUtils.add(array, index, new Byte(element), Byte.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4000: warning: [removal] Short(short) in Short has been deprecated and marked for removal
+        return (short[]) ArrayUtils.add(array, index, new Short(element), Short.TYPE);
+                                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4031: warning: [removal] Integer(int) in Integer has been deprecated and marked for removal
+        return (int[]) ArrayUtils.add(array, index, new Integer(element), Integer.TYPE);
+                                                    ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4062: warning: [removal] Long(long) in Long has been deprecated and marked for removal
+        return (long[]) ArrayUtils.add(array, index, new Long(element), Long.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4093: warning: [removal] Float(float) in Float has been deprecated and marked for removal
+        return (float[]) ArrayUtils.add(array, index, new Float(element), Float.TYPE);
+                                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4124: warning: [removal] Double(double) in Double has been deprecated and marked for removal
+        return (double[]) ArrayUtils.add(array, index, new Double(element), Double.TYPE);
+                                                       ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/CharUtils.java:71: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+            CharUtils.CHAR_ARRAY[i] = new Character((char) i);
+                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/CharUtils.java:105: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+        return new Character(ch);
+               ^
+Note: /home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+1 error
+16 warnings
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:36,687 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:36,690 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f21a6d9265ec01767d，response: 
+<repaired_code>
+public static String toString(Object object){
+  return (object == null) ? null : object.toString();
+}
+</repaired_code>
+
+2025-11-27 15:45:36,690 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f91a6d9265ec01777d，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public static byte convertHexDigit(byte b){
+  if ((b >= '0') && (b <= '9'))   return (byte)(b - '0'
+  if ((b >= 'a') && (b <= 'f'))   return (byte)(b - 'a' + 10);
+  if ((b >= 'A') && (b <= 'F'))   return (byte)(b - 'A' + 10);
+  throw new IllegalArgumentException("!hex:" + Integer.toHexString(0xff & b));
+}
+
+@@Docstring
+/** 
+ * @param b An ASCII encoded character 0-9 a-f A-F
+ * @return The byte value of the character 0-16.
+ */
+
+
+@@Oracle Context
+{ "apis" : "[toHexString]", "classes" : "[]", "vars" : "[]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/json/TypeUtil.java:289: error: ')' expected
+  if ((b >= '0') && (b <= '9'))   return (byte)(b - '0'
+                                                       ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/json/TypeUtil.java:177: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+                return new Character(value.charAt(0));
+                       ^
+1 error
+1 warning
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:40,234 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:40,236 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766f91a6d9265ec01777d，response: 
+<repaired_code>
+public static byte convertHexDigit(byte b) {
+  if ((b >= '0') && (b <= '9')) return (byte)(b - '0');
+  if ((b >= 'a') && (b <= 'f')) return (byte)(b - 'a' + 10);
+  if ((b >= 'A') && (b <= 'F')) return (byte)(b - 'A' + 10);
+  throw new IllegalArgumentException("!hex:" + Integer.toHexString(0xff & b));
+}
+</repaired_code>
+
+2025-11-27 15:45:40,237 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766fa1a6d9265ec01779d，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+public static boolean isAsciiControl(final char ch){
+  return ch < 32 || ch == ;
+}
+
+@@Docstring
+/** 
+ * <p>Checks whether the character is ASCII 7 bit control.</p> <pre> CharUtils.isAsciiControl('a')  = false CharUtils.isAsciiControl('A')  = false CharUtils.isAsciiControl('3')  = false CharUtils.isAsciiControl('-')  = false CharUtils.isAsciiControl('\n') = true CharUtils.isAsciiControl('&copy;') = false </pre>
+ * @param ch  the character to check
+ * @return true if less than 32 or equals 127
+ */
+
+
+@@Oracle Context
+{ "apis" : "[]", "classes" : "[]", "vars" : "[]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/CharUtils.java:443: error: illegal start of expression
+  return ch < 32 || ch == ;
+                          ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/CharUtils.java:71: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+            CharUtils.CHAR_ARRAY[i] = new Character((char) i);
+                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/CharUtils.java:105: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+        return new Character(ch);
+               ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2573: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+            result[i] = new Character(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2641: warning: [removal] Long(long) in Long has been deprecated and marked for removal
+            result[i] = new Long(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2709: warning: [removal] Integer(int) in Integer has been deprecated and marked for removal
+            result[i] = new Integer(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2777: warning: [removal] Short(short) in Short has been deprecated and marked for removal
+            result[i] = new Short(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2845: warning: [removal] Byte(byte) in Byte has been deprecated and marked for removal
+            result[i] = new Byte(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2913: warning: [removal] Double(double) in Double has been deprecated and marked for removal
+            result[i] = new Double(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:2981: warning: [removal] Float(float) in Float has been deprecated and marked for removal
+            result[i] = new Float(array[i]);
+                        ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3938: warning: [removal] Character(char) in Character has been deprecated and marked for removal
+        return (char[]) ArrayUtils.add(array, index, new Character(element), Character.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:3969: warning: [removal] Byte(byte) in Byte has been deprecated and marked for removal
+        return (byte[]) ArrayUtils.add(array, index, new Byte(element), Byte.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4000: warning: [removal] Short(short) in Short has been deprecated and marked for removal
+        return (short[]) ArrayUtils.add(array, index, new Short(element), Short.TYPE);
+                                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4031: warning: [removal] Integer(int) in Integer has been deprecated and marked for removal
+        return (int[]) ArrayUtils.add(array, index, new Integer(element), Integer.TYPE);
+                                                    ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4062: warning: [removal] Long(long) in Long has been deprecated and marked for removal
+        return (long[]) ArrayUtils.add(array, index, new Long(element), Long.TYPE);
+                                                     ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4093: warning: [removal] Float(float) in Float has been deprecated and marked for removal
+        return (float[]) ArrayUtils.add(array, index, new Float(element), Float.TYPE);
+                                                      ^
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java:4124: warning: [removal] Double(double) in Double has been deprecated and marked for removal
+        return (double[]) ArrayUtils.add(array, index, new Double(element), Double.TYPE);
+                                                       ^
+Note: /home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-commons/src/main/java/net/hasor/utils/ArrayUtils.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+1 error
+16 warnings
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+
+2025-11-27 15:45:41,261 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-27 15:45:41,261 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766fa1a6d9265ec01779d，response: 
+<repaired_code>
+public static boolean isAsciiControl(final char ch){
+  return ch < 32 || ch == 127;
+}
+</repaired_code>
+
+2025-11-27 15:45:41,262 - evaluate - INFO - Model：GPT，Feedback：compiler_feedback，Task：636766fc1a6d9265ec0177da，prompt: 
+You are a professional code repair assistant skilled at fixing code errors based on the @@Feedback.
+Your task is to correct the given erroneous code @@Existing Code.
+@@Feedback includes error messages, descriptions of logical issues, or deviations from expected functionality.
+@@Docstring provides a description of the function, its purpose, and details of its input and output parameters.
+@@Oracle Context refers to code elements such as types, APIs, variables, and consts defined outside the function under generation but within the dependent third-party libraries, current class, file, or project.
+
+@@Existing Code
+private static boolean isParameterSeparator(final char c){
+  if (Character.isWhitespace(c)) {
+    return true;
+  }
+  for  char separator : PARAMETER_SEPARATORS) {
+    if (c == separator) {
+      return true;
+    }
+  }
+  return false;
+}
+
+@@Docstring
+/** 
+ * Determine whether a parameter name ends at the current position, that is, whether the given character qualifies as a separator. 
+ */
+
+
+@@Oracle Context
+{ "apis" : "[isWhitespace]", "classes" : "[]", "vars" : "[PARAMETER_SEPARATORS]" }
+
+@@Feedback
+/home/travis/builds/java/CoderEval-Java-projects/hasor/hasor-db/src/main/java/net/hasor/db/jdbc/core/ParsedSql.java:217: error: '(' expected
+  for  char separator : PARAMETER_SEPARATORS) {
+     ^
+1 error
+
+
+Based on the provided information, fix the erroneous code and ensure the following:
+Resolve all errors to make the code functional.
+Address the improvement points mentioned in the feedback.
+Only need to fix the code; do not modify the function signature.
+Adhere to the functionality requirements described in the docstring.
+Utilize the external context (Oracle Context) information for proper API usage, variable references, and any related dependencies.
+
+The output must strictly adhere to the specified format, with all HTML tags included in their entirety:
+<repaired_code>
+Provide the corrected code here.
+</repaired_code>
+

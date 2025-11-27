@@ -17,7 +17,7 @@ def load_env():
 api_key, base_url = load_env()
 
 
-FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_skilled_feedback", "llm_expert_feedback", "minimal_feedback", "mixed_feedback", "test_feedback_baseline", "test_feedback_cot", "test_feedback_no_persona", "test_feedback_few_shot", "test_feedback_no_docstring", "test_feedback_no_context", "test_feedback_no_guideline"]
+FEEDBACK_TYPES = ["test_feedback", "compiler_feedback", "llm_skilled_feedback", "llm_expert_feedback", "minimal_feedback", "mixed_feedback", "test_feedback_baseline", "test_feedback_cot", "test_feedback_no_persona", "test_feedback_few_shot", "test_feedback_no_docstring", "test_feedback_no_context", "test_feedback_no_guideline", "simple_feedback", "human_feedback", "ast_feedback"]
 MODELS = {
     "GPT": "gpt-4o-2024-11-20",
     "Claude": "claude-3-5-sonnet-20241022",

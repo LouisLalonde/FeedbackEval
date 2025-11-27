@@ -1,124 +1,15 @@
 from bm25 import find_best_example
+
 def build_mutant_prompt(ori_code):
-    prompt = """
-    You are an AI code editor and generator. Your goal is to analyze the @@Existing Code and generate mutants in it
-    You can generate one mutant by introducing a single, subtle alteration to the logic, structure, or syntax of the code.
-    The mutation should impact the functionality in a meaningful way without completely changing the intent or purpose of the original code.
-
-    @@Existing Code
-    {}
-
-    #Requirement: 
-    1. Provide generated mutants directly.
-    2. Prohibit generating the exact same mutants.
-    3. Do not explain how the mutant was generated, only output the mutated code. 
-    4. The output must be in the following format:
-    ```python
-    # Your codes here
-    ```
-    """.strip().format(
-        ori_code
-    )
-    return prompt
+    pass
 
 
 def build_gpt_prompt(dataset, code, docstring=None, context=None):
-    if dataset == "CoderEval":
-        prompt = """
-You are a highly skilled and thoughtful programming assistant tasked with guiding a programmer to improve the code. 
-Your primary goal is to analyze the @@Existing Code based on the provided @@Docstring and @@Oracle Context to identify 
-potential issues and offer suggestions for improvement.
-Carefully review the @@Existing Code and understand its structure, logic, and functionality.
-Compare the code against the @@Docstring to ensure it adheres to the described purpose, inputs, outputs, and behavior.
-Use the @@Oracle Context to ensure the code correctly interacts with external elements, such as types, APIs, variables, 
-or constants, and adheres to the dependencies and integration requirements within the broader environment.
-#Requirement: 
-1. Offer guidance in a clear and understandable manner, explaining the rationale behind each suggestion.
-2. Refrain from providing actual code solutions, but instead focus on conceptual modifications or strategies.
-3. Please respond in no more than three sentences.
-@@Existing Code
-{}
-
-@@Docstring
-{}
-
-@@Oracle Context
-{}
-    """.strip().format(
-            code, docstring, context
-        )
-    elif dataset == "HumanEval":
-        prompt = """
-You are a highly skilled and thoughtful programming assistant tasked with guiding a programmer to improve the code. 
-Your primary goal is to analyze the @@Existing Code to identify potential issues and offer suggestions for improvement.
-Carefully review the @@Existing Code and understand its structure, logic, and functionality.
-
-#Requirement: 
-1. Offer guidance in a clear and understandable manner, explaining the rationale behind each suggestion.
-2. Refrain from providing actual code solutions, but instead focus on conceptual modifications or strategies.
-3. Please respond in no more than three sentences.
-@@Existing Code
-{}
-""".strip().format(
-            code
-        )
-    else:
-        raise ValueError(f"Invalid dataset: {dataset}")
-    return prompt
+    pass
 
 
 def build_gpt_gt_prompt(dataset, code, correct_code, docstring=None, context=None):
-    if dataset == "CoderEval":
-        prompt = """
-You are a highly skilled and thoughtful programming assistant tasked with guiding a programmer to improve the code. 
-Your primary goal is to analyze the @@Existing Code based on the provided @@Docstring, @@Oracle Context and 
-@@Correct Code to identify potential issues and offer suggestions for improvement.
-Carefully review the @@Existing Code and understand its structure, logic, and functionality.
-Compare the code against the @@Docstring to ensure it adheres to the described purpose, inputs, outputs, and behavior.
-Use the @@Oracle Context to ensure the code correctly interacts with external elements, such as types, APIs, variables, 
-or constants, and adheres to the dependencies and integration requirements within the broader environment. Then, compare 
-the @@Existing Code against the @@Correct Code to highlight deviations, misunderstandings, or missed optimizations.
-#Requirement: 
-1. Offer guidance in a clear and understandable manner, explaining the rationale behind each suggestion.
-2. Refrain from providing actual code solutions, but instead focus on conceptual modifications or strategies.
-3. Please respond in no more than three sentences.
-@@Existing Code
-{}
-
-@@Docstring
-{}
-
-@@Oracle Context
-{}
-
-@@Correct Code
-{}
-    """.strip().format(
-            code, docstring, context, correct_code
-        )
-    elif dataset == "HumanEval":
-        prompt = """
-You are a highly skilled and thoughtful programming assistant tasked with guiding a programmer to improve the code. 
-Your primary goal is to analyze the @@Existing Code to identify potential issues and offer suggestions for improvement.
-Carefully review the @@Existing Code and understand its structure, logic, and functionality. Then, compare 
-the @@Existing Code against the @@Correct Code to highlight deviations, misunderstandings, or missed optimizations.
-
-#Requirement: 
-1. Offer guidance in a clear and understandable manner, explaining the rationale behind each suggestion.
-2. Refrain from providing actual code solutions, but instead focus on conceptual modifications or strategies.
-3. Please respond in no more than three sentences.
-@@Existing Code
-{}
-
-@@Correct Code
-{}
-""".strip().format(
-            code, correct_code
-        )
-    else:
-        raise ValueError(f"Invalid dataset: {dataset}")
-    return prompt
-
+    pass
 
 def build_repair_prompt(
     solution,
@@ -192,24 +83,32 @@ Fixed Code:
         header_parts.append(
             """For example:
 Erroneous Code:
-def calculate_average(numbers):
-total = 0
-for num in numbers:
-    total += num
-return total / len(numbers)
+public static double calculateAverage(List<Double> numbers) {
+    double total = 0;
+    for (Double num : numbers) {
+    total += num;
+    }
+    return total / numbers.size();
+}
 
 Feedback:
-Consider adding error handling to manage potential issues, such as division by zero when the input list is empty. 
-Additionally, using built-in functions like `sum()` can simplify the code and improve readability, making it more pythonic. 
-Finally, ensure that the function can handle non-numeric inputs to prevent runtime errors.
+Consider adding error handling to manage potential issues, such as division by zero when the input list is null or empty.
+Additionally, using the Streams API or built-in utilities can simplify the code and improve readability.
+Finally, ensure that the method can handle null elements in the list to prevent NullPointerException.
 
 Fixed Code:
-def calculate_average(numbers):
-if not numbers:
-    raise ValueError("Input list is empty. Cannot calculate average.")
-return sum(numbers) / len(numbers)
+public static double calculateAverage(List<Double> numbers) {
+    if (numbers == null || numbers.isEmpty()) {
+    throw new IllegalArgumentException("Input list is null or empty. Cannot calculate average.");
+    }
+    double sum = numbers.stream()
+            .filter(Objects::nonNull)
+            .mapToDouble(Double::doubleValue)
+            .sum();
+    return sum / numbers.size();
+}
 """
-        )
+    )
     header = "\n".join(header_parts)
 
     prompt_sections: list[str] = []

@@ -1,7 +1,7 @@
 #!/bin/bash
 export PYTHONPATH=$(pwd)/../..
 DATASET=("CoderEval")
-FEEDBACK_TYPES=("compiler_feedback" "llm_skilled_feedback" "test_feedback" "minimal_feedback")
+FEEDBACK_TYPES=("compiler_feedback" "human_feedback" "simple_feedback")
 declare -A MODELS=(
     ["GPT"]="gpt-4o-mini"
 )
